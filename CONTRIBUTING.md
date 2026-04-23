@@ -34,18 +34,46 @@ To keep the quality of the galaxy high, please ensure your suggestions meet thes
 
 ### 1. Open an Issue or PR
 * For **small changes** (typos, broken links): Open a Pull Request directly.
-* For **new libraries**: Open an Issue first so we can discuss where it fits in the "Stellar Systems."
+* For **new libraries**: Open an Issue first so we can discuss which **Stellar System** it belongs to. The current systems are:
+    1. ☀️ **The Sun** — Core & Kernels
+    2. 🪐 **The Giants** — Neural Network Frameworks
+    3. 🛰️ **The Satellites** — Training Infrastructure
+    4. 🌌 **Constellations** — LLM & Foundation-Model Training
+    5. 🧪 **Scientific Computing & Simulation** (with Life Sciences / Solvers / Physics / Cosmology / Imaging sub-bullets)
+    6. 📊 **Probabilistic Programming**
+    7. 🤖 **Reinforcement Learning & Evolution**
+    8. 🔭 **Domain Libraries** — Graphs / Vision / Brain Dynamics / Specialty
+    9. 🛸 **Onramps** — canonical reference implementations
+    10. ⚠️ **Legacy Radar** — superseded / dormant libraries
 
 ### 2. Formatting your Entry
-If adding a library, please use the following format:
+Every library entry must follow this exact format:
 
-`- [Library Name](link): Concise description (1-2 sentences). Mention if it's a DeepMind/Google project.`
+```markdown
+* 🟢 **[Library Name](https://github.com/USER/REPO)**: One-sentence sharp value proposition. <img src="https://img.shields.io/github/stars/USER/REPO?style=social" align="center">
+```
+
+Rules:
+* Pick a status: 🟢 Active · 🟡 Stable · 🔴 Legacy.
+* One sentence. Tell us **why** a 2026 user would reach for it, not what its README says.
+* Include the dynamic stars badge so readers can gauge adoption at a glance.
+* If it's a DeepMind / Google / DeepMind-InstaDeep / Stanford project, work that attribution into the sentence.
 
 ### 3. Commit Messages
-Be clear and concise. 
-* `feat: add Diffrax to the satellites system`
+Be clear and concise.
+* `feat: add Diffrax to Scientific Computing`
 * `fix: update broken link for Orbax`
 * `refactor: move Haiku to legacy radar`
+* `chore: run health_check.py and downgrade stale entries`
+
+### 4. Health Check Script
+Before opening a PR that adds or updates many entries, run:
+
+```bash
+python scripts/health_check.py
+```
+
+It fetches the last-commit date and star count for every linked repository and flags any entry whose status badge looks out of date (e.g. a 🟢 whose repo hasn't seen a commit in 18+ months). Reconcile flagged entries before submitting.
 
 ---
 
