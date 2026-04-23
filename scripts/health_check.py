@@ -8,6 +8,7 @@ and flags entries whose status looks stale.
 Usage:
     python scripts/health_check.py                 # stdout report
     python scripts/health_check.py --output health_report.md
+    python scripts/health_check.py --json observatory/public/galaxy.json
     GITHUB_TOKEN=ghp_... python scripts/health_check.py  # higher rate limit
 """
 from __future__ import annotations
@@ -30,6 +31,10 @@ STATUS_RANK = {ACTIVE: 3, STABLE: 2, LEGACY: 1}
 STATUS_RE = re.compile(r"(🟢|🟡|🔴)")
 BADGE_RE = re.compile(r"shields\.io/github/stars/([^/?\s]+)/([^/?\s]+)\?")
 ENTRY_RE = re.compile(r"^\s*\*\s")
+SECTION_RE = re.compile(r"^##\s+(.+?)\s*$")
+# After the closing `**` of the linked title, capture the description up to an
+# optional trailing shields.io <img ...> badge. Works with `: ` or `— ` separators.
+DESC_RE = re.compile(r"\*\*\s*[:—–-]\s*(.+?)(?:\s*<img\b[^>]*>)?\s*$")
 
 # Thresholds (months since last push) — tuned to match the CONTRIBUTING.md status legend.
 STALE_MONTHS = 18
@@ -42,6 +47,9 @@ class Entry:
     repo: str
     current: str
     line_no: int
+    section: str | None = None
+    description: str | None = None
+    url: str | None = None
 
 
 @dataclass
@@ -54,18 +62,28 @@ class RepoState:
 
 def parse_readme(path: Path) -> list[Entry]:
     entries: list[Entry] = []
+    current_section: str | None = None
     for i, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        section_m = SECTION_RE.match(line)
+        if section_m:
+            current_section = section_m.group(1).strip()
+            continue
         if not ENTRY_RE.match(line):
             continue
         status_m = STATUS_RE.search(line)
         badge_m = BADGE_RE.search(line)
         if status_m and badge_m:
+            desc_m = DESC_RE.search(line)
+            user, repo = badge_m.group(1), badge_m.group(2)
             entries.append(
                 Entry(
-                    user=badge_m.group(1),
-                    repo=badge_m.group(2),
+                    user=user,
+                    repo=repo,
                     current=status_m.group(1),
                     line_no=i,
+                    section=current_section,
+                    description=desc_m.group(1).strip() if desc_m else None,
+                    url=f"https://github.com/{user}/{repo}",
                 )
             )
     return entries
@@ -129,6 +147,45 @@ def flag_for(entry: Entry, state: RepoState, sug: str) -> str:
     return ""
 
 
+def render_galaxy_json(entries: list[Entry], states: dict[tuple[str, str], RepoState]) -> str:
+    """Serialize the audit into the shape the Observatory site consumes.
+
+    Intentionally separate from render_report: the markdown report is for
+    humans reviewing an Issue; this JSON is for the Three.js scene.
+    """
+    now = dt.datetime.now(dt.timezone.utc)
+    stars = []
+    for e in entries:
+        state = states[(e.user, e.repo)]
+        sug = suggest(state, now)
+        flag = flag_for(e, state, sug)
+        months = None
+        if state.pushed_at is not None:
+            months = round((now - state.pushed_at).days / 30.44, 1)
+        stars.append(
+            {
+                "user": e.user,
+                "repo": e.repo,
+                "url": e.url or f"https://github.com/{e.user}/{e.repo}",
+                "section": e.section or "",
+                "description": e.description or "",
+                "status": e.current,
+                "suggested": sug,
+                "stars": state.stars,
+                "last_push_months_ago": months,
+                "archived": state.archived,
+                "flag": flag,
+            }
+        )
+    payload = {
+        "generated_at": now.isoformat(timespec="minutes"),
+        "total": len(entries),
+        "thresholds": {"stale_months": STALE_MONTHS, "abandoned_months": ABANDONED_MONTHS},
+        "stars": stars,
+    }
+    return json.dumps(payload, ensure_ascii=False, indent=2)
+
+
 def render_report(entries: list[Entry], states: dict[tuple[str, str], RepoState]) -> tuple[str, int]:
     now = dt.datetime.now(dt.timezone.utc)
     lines = [
@@ -161,6 +218,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Audit JAXlaxy entry classifications against GitHub state.")
     parser.add_argument("--readme", default="README.md", type=Path, help="Path to README.md")
     parser.add_argument("--output", type=Path, help="Write the Markdown report to this path")
+    parser.add_argument("--json", dest="json_path", type=Path, help="Write the Observatory galaxy JSON to this path")
     parser.add_argument("--delay", type=float, default=0.3, help="Seconds between API requests")
     args = parser.parse_args(argv)
 
@@ -190,6 +248,10 @@ def main(argv: list[str] | None = None) -> int:
     if args.output:
         args.output.write_text(report, encoding="utf-8")
         print(f"\nWrote: {args.output}  (flagged: {flagged})", file=sys.stderr)
+    if args.json_path:
+        args.json_path.parent.mkdir(parents=True, exist_ok=True)
+        args.json_path.write_text(render_galaxy_json(entries, states), encoding="utf-8")
+        print(f"\nWrote: {args.json_path}  ({len(entries)} stars)", file=sys.stderr)
     return 0 if flagged == 0 else 1
 
 

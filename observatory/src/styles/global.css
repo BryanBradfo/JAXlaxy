@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme {
+  --color-void: #000000;
+  --color-cyan-neon: #00f2ff;
+  --color-violet-electric: #8a2be2;
+  --font-display: "Space Grotesk", "Inter", system-ui, sans-serif;
+}
+
+html,
+body {
+  background: var(--color-void);
+  color: white;
+  font-family: var(--font-display);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-cyan-neon);
+  color: var(--color-void);
+}

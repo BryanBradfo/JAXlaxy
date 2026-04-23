@@ -300,6 +300,8 @@ This fetches last-commit dates and star counts for every linked repo and flags c
 
 The galaxy is also audited automatically every Monday via GitHub Actions — dying stars get flagged in an Issue before you ever need to look. See [`CONTRIBUTING.md`](CONTRIBUTING.md) for details.
 
+Prefer to *see* the galaxy? The [**Observatory**](observatory/) is a cinematic 3D map of every entry — size-by-stars, color-by-health, click-to-explore. `cd observatory && npm run dev` from a fresh clone.
+
 ---
 
 *Maintained with ❤️ by the JAX community. 2026 Edition. Let's map the stars.* 🌌
