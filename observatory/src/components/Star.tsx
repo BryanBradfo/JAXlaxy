@@ -1,7 +1,7 @@
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
-import type { Mesh } from "three";
-import { useFrame } from "@react-three/fiber";
+import { Group, Mesh, Vector3 } from "three";
+import { useFrame, useThree } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import type { Status } from "../types/galaxy";
 import type { PositionedStar } from "./StarField";
@@ -12,8 +12,6 @@ import type { PositionedStar } from "./StarField";
  * Under bloom post-processing with a high threshold (~0.5), only the
  * brightest pixels cross the bloom cutoff and halo outward — the rest of
  * the sphere surface sits below threshold and reads as a crisp disc.
- * These intensities are tuned for that regime: low enough to keep the
- * star-body subtle, high enough that the peak still blooms.
  *
  * Each entry: hex color (shared by `color` and `emissive`) + emissiveIntensity.
  */
@@ -26,6 +24,11 @@ const STATUS_PALETTE: Record<Status, { hex: string; intensity: number }> = {
 function sizeFor(stars: number | null): number {
   return Math.log((stars ?? 100) + 1) * 0.06 + 0.1;
 }
+
+// Distance (world units) below which a star's repo label fades in. Star
+// shell radius is 34–48u; default camera distance is 85u. At default zoom
+// only near-hemisphere stars cross this; as the user zooms in, more reveal.
+const NEAR_DISTANCE = 55;
 
 const LABEL_BASE: CSSProperties = {
   borderRadius: 4,
@@ -63,15 +66,30 @@ interface StarProps {
 }
 
 export function Star({ star, isSelected, onSelect }: StarProps) {
+  const groupRef = useRef<Group>(null);
   const meshRef = useRef<Mesh>(null);
   const [hovered, setHovered] = useState(false);
+  const [nearEnough, setNearEnough] = useState(false);
   const palette = STATUS_PALETTE[star.status] ?? STATUS_PALETTE["🟡"];
   const baseSize = sizeFor(star.stars);
 
+  // Single Vector3 instance reused each frame for distance computation —
+  // avoids GC pressure from allocating a new vector 60×/second per star.
+  const { camera } = useThree();
+  const worldPos = useMemo(() => new Vector3(), []);
+
   useFrame((state) => {
+    // Distance gating for label visibility. getWorldPosition reads the
+    // post-rotation world transform — respects the AutoRotator wrapper.
+    if (groupRef.current) {
+      groupRef.current.getWorldPosition(worldPos);
+      const near = camera.position.distanceTo(worldPos) < NEAR_DISTANCE;
+      if (near !== nearEnough) setNearEnough(near);
+    }
+
+    // Scale animation (existing behavior).
     const mesh = meshRef.current;
     if (!mesh) return;
-    // Hover and selected both enlarge the star; they compose additively.
     const activeScale = isSelected && hovered ? 1.7 : hovered || isSelected ? 1.5 : 1;
     if (star.status === "🟡") {
       const pulse =
@@ -82,15 +100,17 @@ export function Star({ star, isSelected, onSelect }: StarProps) {
     }
   });
 
-  // Emissive also composes: selected brightens (×2.2), hovering on top of
+  // Emissive composition: selected brightens (×2.2), hovering on top of
   // selected brightens further (×3.0), hover alone brightens (×2.2).
   const emissiveMultiplier = isSelected && hovered ? 3.0 : hovered || isSelected ? 2.2 : 1;
 
-  const showLabel = hovered || star.isLandmark;
+  // Label visibility has three independent triggers. `showLabel` drives the
+  // opacity target; the <Html> stays mounted and CSS handles the fade.
+  const showLabel = hovered || star.isLandmark || nearEnough;
   const labelStyle = hovered ? LABEL_HOVER : LABEL_LANDMARK;
 
   return (
-    <group position={star.position}>
+    <group ref={groupRef} position={star.position}>
       {/* Visible star */}
       <mesh ref={meshRef}>
         <sphereGeometry args={[1, 24, 24]} />
@@ -103,9 +123,8 @@ export function Star({ star, isSelected, onSelect }: StarProps) {
         />
       </mesh>
 
-      {/* Selection ring — horizontal torus in the Lab Blue accent, thinner
-          and more precise than the previous neon ring. depthWrite off so it
-          never occludes stars rendered through it. */}
+      {/* Selection ring — horizontal torus in Lab Blue. depthWrite off so
+          it never occludes stars rendered through it. */}
       {isSelected && (
         <mesh rotation={[Math.PI / 2, 0, 0]}>
           <torusGeometry args={[1.4, 0.03, 10, 48]} />
@@ -139,18 +158,23 @@ export function Star({ star, isSelected, onSelect }: StarProps) {
         <meshBasicMaterial transparent opacity={0} depthWrite={false} />
       </mesh>
 
-      {showLabel && (
-        <Html
-          position={[0, baseSize + 0.4, 0]}
-          center
-          zIndexRange={[100, 0]}
-          style={{ pointerEvents: "none" }}
-        >
-          <div style={labelStyle}>
-            {star.user}/{star.repo}
-          </div>
-        </Html>
-      )}
+      {/* Always-mounted label. Opacity is the only thing that animates —
+          the <Html> portal itself never unmounts, so the CSS transition
+          runs reliably on both enter and exit. */}
+      <Html
+        position={[0, baseSize + 0.4, 0]}
+        center
+        zIndexRange={[100, 0]}
+        style={{
+          pointerEvents: "none",
+          opacity: showLabel ? 1 : 0,
+          transition: "opacity 260ms ease",
+        }}
+      >
+        <div style={labelStyle}>
+          {star.user}/{star.repo}
+        </div>
+      </Html>
     </group>
   );
 }

@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import type { Star as StarData } from "../types/galaxy";
 import { Star } from "./Star";
+import { ConstellationLabel } from "./ConstellationLabel";
 
 // xmur3 — a tiny seeded PRNG. Same `user/repo` string always produces the
 // same position across reloads, so google/jax stays put.
@@ -157,12 +158,46 @@ export function StarField({ stars, selectedStar, onSelect }: StarFieldProps) {
     }));
   }, [stars]);
 
+  // Average position per section — anchors for the macro-scale constellation
+  // labels. Computed once per data change; typical input is 75 stars so
+  // the single pass is trivial.
+  const centroids = useMemo(() => {
+    type Acc = { sum: [number, number, number]; count: number };
+    const acc = new Map<string, Acc>();
+    for (const s of positioned) {
+      const existing = acc.get(s.section) ?? {
+        sum: [0, 0, 0] as [number, number, number],
+        count: 0,
+      };
+      existing.sum[0] += s.position[0];
+      existing.sum[1] += s.position[1];
+      existing.sum[2] += s.position[2];
+      existing.count += 1;
+      acc.set(s.section, existing);
+    }
+    return Array.from(acc, ([section, { sum, count }]) => ({
+      section,
+      position: [
+        sum[0] / count,
+        sum[1] / count,
+        sum[2] / count,
+      ] as [number, number, number],
+    }));
+  }, [positioned]);
+
   const selectedKey = selectedStar
     ? `${selectedStar.user}/${selectedStar.repo}`
     : null;
 
   return (
     <>
+      {centroids.map((c) => (
+        <ConstellationLabel
+          key={c.section}
+          section={c.section}
+          position={c.position}
+        />
+      ))}
       {positioned.map((s) => {
         const key = `${s.user}/${s.repo}`;
         return (
