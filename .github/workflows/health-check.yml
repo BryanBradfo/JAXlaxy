@@ -1,0 +1,81 @@
+name: Health Check (Autopilot)
+
+on:
+  schedule:
+    # Every Monday at 00:00 UTC — the galaxy's weekly self-audit.
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  audit:
+    name: Audit galaxy health
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run health check
+        id: health
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Exit 1 means "flags detected" — our alert signal, not a job failure.
+          # We capture the code and let downstream steps decide what to do.
+          set +e
+          python scripts/health_check.py --output health_report.md
+          echo "exit_code=$?" >> "$GITHUB_OUTPUT"
+          set -e
+
+      - name: Upload report as artifact
+        if: always() && hashFiles('health_report.md') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: health-report
+          path: health_report.md
+          retention-days: 30
+
+      - name: Open alert issue on flags
+        if: steps.health.outputs.exit_code != '0' && hashFiles('health_report.md') != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPORT_FILE: health_report.md
+          ISSUE_TITLE: "🚨 Health Alert: Stale or Archived Repositories Detected"
+        run: |
+          # Dedup: if an open issue with the same title already exists, comment
+          # on it instead of spawning a duplicate every Monday.
+          existing=$(gh issue list \
+            --state open \
+            --search "in:title \"${ISSUE_TITLE}\"" \
+            --json number \
+            --jq '.[0].number // empty')
+
+          if [ -n "$existing" ]; then
+            echo "Appending weekly report to existing issue #${existing}"
+            gh issue comment "$existing" --body-file "$REPORT_FILE"
+          else
+            echo "Opening new health-alert issue"
+            gh issue create \
+              --title "$ISSUE_TITLE" \
+              --body-file "$REPORT_FILE" \
+              --label "health-alert" \
+              --label "automated"
+          fi
+
+      - name: Fail job on schema error
+        # Distinguish "flags exist" (non-zero WITH report) from "README schema
+        # broken" (non-zero WITHOUT report). The latter deserves a red ❌.
+        if: steps.health.outputs.exit_code != '0' && hashFiles('health_report.md') == ''
+        env:
+          EXIT_CODE: ${{ steps.health.outputs.exit_code }}
+        run: |
+          echo "::error::health_check.py exited ${EXIT_CODE} without producing a report — README schema likely broken."
+          exit 1
