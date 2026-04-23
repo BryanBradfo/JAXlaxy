@@ -75,6 +75,8 @@ python scripts/health_check.py
 
 It fetches the last-commit date and star count for every linked repository and flags any entry whose status badge looks out of date (e.g. a 🟢 whose repo hasn't seen a commit in 18+ months). Reconcile flagged entries before submitting.
 
+> 🤖 **Autopilot:** This script also runs automatically every **Monday at 00:00 UTC** via [`.github/workflows/health-check.yml`](.github/workflows/health-check.yml). If any downgrade, broken link, or archived-but-unmarked repo is detected, the workflow opens (or comments on an existing) issue titled **"🚨 Health Alert: Stale or Archived Repositories Detected"** with the full report attached. You can also trigger it manually from the **Actions** tab.
+
 ---
 
 ## 📜 Code of Conduct

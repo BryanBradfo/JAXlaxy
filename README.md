@@ -298,6 +298,8 @@ python scripts/health_check.py
 
 This fetches last-commit dates and star counts for every linked repo and flags classifications that look stale.
 
+The galaxy is also audited automatically every Monday via GitHub Actions — dying stars get flagged in an Issue before you ever need to look. See [`CONTRIBUTING.md`](CONTRIBUTING.md) for details.
+
 ---
 
 *Maintained with ❤️ by the JAX community. 2026 Edition. Let's map the stars.* 🌌
