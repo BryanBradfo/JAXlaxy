@@ -166,7 +166,7 @@ Every entry ships with a **health indicator** — 🟢 Active · 🟡 Stable · 
 
 *End-to-end JIT'd training loops and hardware-accelerated environments — the JAX RL stack trains in minutes what TensorFlow took hours to simulate.*
 
-* 🟢 **[PureJaxRL](https://github.com/luchris429/purejaxrl)**: Fully vectorized, end-to-end JIT'd RL pipelines — PPO on 2048 envs without leaving JAX. <img src="https://img.shields.io/github/stars/luchris429/purejaxrl?style=social" align="center">
+* 🟡 **[PureJaxRL](https://github.com/luchris429/purejaxrl)**: Fully vectorized, end-to-end JIT'd RL pipelines — PPO on 2048 envs without leaving JAX. Low recent commit activity, but remains the canonical reference for the JAX-native RL-loop pattern. <img src="https://img.shields.io/github/stars/luchris429/purejaxrl?style=social" align="center">
 * 🟢 **[Jumanji](https://github.com/instadeepai/jumanji)**: InstaDeep's suite of industry-driven, hardware-accelerated RL environments — from bin-packing to routing. <img src="https://img.shields.io/github/stars/instadeepai/jumanji?style=social" align="center">
 * 🟢 **[gymnax](https://github.com/RobertTLange/gymnax)**: Classic Gym environments re-implemented in JAX — CartPole, Atari-lite, bsuite, and more, all JIT-compatible. <img src="https://img.shields.io/github/stars/RobertTLange/gymnax?style=social" align="center">
 * 🟢 **[Pgx](https://github.com/sotetsuk/pgx)**: Vectorized board-game environments with an AlphaZero reference — Chess, Shogi, Go at scale. <img src="https://img.shields.io/github/stars/sotetsuk/pgx?style=social" align="center">
@@ -231,7 +231,7 @@ Every entry ships with a **health indicator** — 🟢 Active · 🟡 Stable · 
 | **Differentiable physics simulation** | [Brax](https://github.com/google/brax) or [JAX-MD](https://github.com/jax-md/jax-md) | 🟢 | Brax = rigid body, JAX-MD = molecular dynamics |
 | **Probabilistic modelling (full DSL)** | [NumPyro](https://github.com/pyro-ppl/numpyro) | 🟢 | Pyro-lineage, fast, mainstream |
 | **Sampling only (MCMC / SMC / VI)** | [BlackJAX](https://github.com/blackjax-devs/blackjax) | 🟢 | Composable samplers, no DSL lock-in |
-| **RL research** | [PureJaxRL](https://github.com/luchris429/purejaxrl) + [Jumanji](https://github.com/instadeepai/jumanji) / [gymnax](https://github.com/RobertTLange/gymnax) | 🟢 | End-to-end JIT'd loops + accelerator-native envs |
+| **RL research** | [PureJaxRL](https://github.com/luchris429/purejaxrl) + [Jumanji](https://github.com/instadeepai/jumanji) / [gymnax](https://github.com/RobertTLange/gymnax) | 🟡 | End-to-end JIT'd loops (PureJaxRL is in maintenance but still canonical) + 🟢 accelerator-native envs |
 | **Protein / biomolecular structure** | [AlphaFold 3](https://github.com/google-deepmind/alphafold3) | 🟢 | DeepMind canonical (research license) |
 | **Interpretability / model surgery** | [Penzai](https://github.com/google-deepmind/penzai) | 🟢 | DeepMind's introspective modelling library |
 | **TPU/GPU kernel authoring** | [Pallas](https://jax.readthedocs.io/en/latest/pallas/index.html) | 🟢 | JAX-native — write kernels without leaving Python |
