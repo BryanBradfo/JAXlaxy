@@ -103,15 +103,16 @@ export function Star({ star, isSelected, onSelect }: StarProps) {
         />
       </mesh>
 
-      {/* Selection ring — horizontal torus, cyan, translucent. depthWrite
-          off so it never occludes stars rendered through it. */}
+      {/* Selection ring — horizontal torus in the Lab Blue accent, thinner
+          and more precise than the previous neon ring. depthWrite off so it
+          never occludes stars rendered through it. */}
       {isSelected && (
         <mesh rotation={[Math.PI / 2, 0, 0]}>
-          <torusGeometry args={[1.4, 0.04, 10, 48]} />
+          <torusGeometry args={[1.4, 0.03, 10, 48]} />
           <meshBasicMaterial
-            color="#00f2ff"
+            color="#7dd3fc"
             transparent
-            opacity={0.65}
+            opacity={0.7}
             depthWrite={false}
           />
         </mesh>

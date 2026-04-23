@@ -5,6 +5,10 @@ import type { Galaxy, Star, Status } from "../types/galaxy";
 type SortKey = "stars" | "name";
 type SortDir = "asc" | "desc";
 
+const ACCENT = "#7dd3fc";
+const MONO = '"JetBrains Mono", ui-monospace, "SF Mono", monospace';
+const SANS = '"Inter", system-ui, sans-serif';
+
 const STATUS_COLOR: Record<Status, string> = {
   "🟢": "#39ff88",
   "🟡": "#ffd93d",
@@ -17,11 +21,6 @@ const STATUS_LABEL: Record<Status, string> = {
   "🔴": "Legacy",
 };
 
-const CYAN = "#00f2ff";
-
-// Search matches either the full "user/repo" slug or the description. Case-
-// insensitive, trimmed — the cheapest UX win. No fuzzy matching: with ~75
-// entries and quick descriptions, substring is plenty.
 function matchesQuery(star: Star, q: string): boolean {
   if (!q) return true;
   const needle = q.toLowerCase();
@@ -59,7 +58,6 @@ export default function TableController() {
 
   const sections = useMemo(() => {
     if (!galaxy) return [];
-    // Preserve README order (section's first appearance in galaxy.stars).
     const seen = new Set<string>();
     const ordered: string[] = [];
     for (const s of galaxy.stars) {
@@ -86,8 +84,6 @@ export default function TableController() {
       setSortDir((d) => (d === "asc" ? "desc" : "asc"));
     } else {
       setSortKey(key);
-      // Sensible default direction per key: stars desc (biggest first),
-      // name asc (A–Z).
       setSortDir(key === "stars" ? "desc" : "asc");
     }
   };
@@ -99,272 +95,482 @@ export default function TableController() {
 
   if (error) {
     return (
-      <div className="py-20 text-center text-white/60 text-sm">
-        Failed to load <code>galaxy.json</code>: {error}
+      <div
+        className="py-20 text-center"
+        style={{
+          color: "rgba(255, 255, 255, 0.55)",
+          fontSize: 12,
+          fontFamily: SANS,
+          letterSpacing: "0.01em",
+        }}
+      >
+        Failed to load <code style={{ fontFamily: MONO }}>galaxy.json</code>:{" "}
+        {error}
         <br />
-        Generate it with:{" "}
-        <code style={{ color: CYAN }}>
-          python scripts/health_check.py --json observatory/public/galaxy.json
-        </code>
+        <span style={{ marginTop: 8, display: "inline-block" }}>
+          Generate with{" "}
+          <code style={{ fontFamily: MONO, color: ACCENT }}>
+            python scripts/health_check.py --json observatory/public/galaxy.json
+          </code>
+        </span>
       </div>
     );
   }
 
   if (!galaxy) {
     return (
-      <div className="py-20 text-center text-white/40 text-sm">
-        Loading constellations…
+      <div
+        className="py-20 text-center"
+        style={{
+          color: "rgba(255, 255, 255, 0.35)",
+          fontSize: 11,
+          fontFamily: SANS,
+          letterSpacing: "0.1em",
+          textTransform: "uppercase",
+        }}
+      >
+        Loading…
       </div>
     );
   }
 
   const inputStyle: CSSProperties = {
-    background: "rgba(0, 0, 0, 0.4)",
-    border: `1px solid ${
-      queryFocused ? "rgba(0, 242, 255, 0.6)" : "rgba(255, 255, 255, 0.1)"
+    background: "transparent",
+    border: "none",
+    borderBottom: `1px solid ${
+      queryFocused ? ACCENT : "rgba(255, 255, 255, 0.1)"
     }`,
-    borderRadius: 8,
     color: "white",
-    padding: "10px 14px",
-    fontSize: 14,
+    padding: "8px 0",
+    fontSize: 13,
+    fontFamily: SANS,
+    letterSpacing: "0.01em",
     width: "100%",
     outline: "none",
     transition: "border-color 120ms ease",
   };
 
   const pill = (active: boolean): CSSProperties => ({
-    padding: "6px 12px",
-    borderRadius: 9999,
-    fontSize: 11,
+    padding: "4px 10px",
+    borderRadius: 3,
+    fontSize: 10,
     border: active
-      ? `1px solid ${CYAN}80`
+      ? `1px solid ${ACCENT}`
       : "1px solid rgba(255, 255, 255, 0.1)",
-    background: active ? "rgba(0, 242, 255, 0.12)" : "transparent",
-    color: active ? CYAN : "rgba(255, 255, 255, 0.6)",
+    background: active ? "rgba(125, 211, 252, 0.08)" : "transparent",
+    color: active ? ACCENT : "rgba(255, 255, 255, 0.55)",
     cursor: "pointer",
     whiteSpace: "nowrap",
-    letterSpacing: 0.2,
-    transition: "all 120ms ease",
+    letterSpacing: "0.05em",
+    textTransform: "uppercase",
+    fontFamily: SANS,
+    fontWeight: 500,
+    transition: "all 100ms ease",
   });
 
   const sortIndicator = (key: SortKey) =>
     sortKey === key ? (sortDir === "asc" ? "↑" : "↓") : "";
 
   return (
-    <div>
-      {/* Header row: title + stats + search */}
-      <div className="flex flex-col md:flex-row gap-5 items-start md:items-end justify-between mb-6">
-        <div>
-          <h1 className="text-3xl font-semibold tracking-tight">
-            <span style={{ color: CYAN }}>Data</span>
-            <span className="text-white/70"> Table</span>
-          </h1>
-          <p className="text-white/50 text-sm mt-1">
-            {rows.length}{" "}
-            {rows.length === 1 ? "repository" : "repositories"}{" "}
-            {rows.length !== galaxy.stars.length && (
-              <span className="text-white/35">
-                of {galaxy.stars.length}
-              </span>
-            )}{" "}
-            ·{" "}
-            <span className="text-white/40">
-              generated {new Date(galaxy.generated_at).toLocaleDateString()}
-            </span>
-          </p>
-        </div>
-        <div className="w-full md:w-96">
-          <input
-            type="search"
-            placeholder="Search repos or descriptions…"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onFocus={() => setQueryFocused(true)}
-            onBlur={() => setQueryFocused(false)}
-            style={inputStyle}
-            aria-label="Search repositories"
-          />
-        </div>
-      </div>
-
-      {/* Category pills */}
-      <div className="flex flex-wrap gap-2 mb-5">
-        <button
-          type="button"
-          onClick={() => setSelectedSection(null)}
-          style={pill(selectedSection === null)}
-        >
-          All
-        </button>
-        {sections.map((section) => (
-          <button
-            type="button"
-            key={section}
-            onClick={() =>
-              setSelectedSection(
-                selectedSection === section ? null : section,
-              )
-            }
-            style={pill(selectedSection === section)}
-          >
-            {section}
-          </button>
-        ))}
-      </div>
-
-      {/* Table */}
-      <div
-        className="rounded-xl overflow-hidden"
-        style={{
-          border: "1px solid rgba(255, 255, 255, 0.08)",
-          background: "rgba(255, 255, 255, 0.015)",
-          backdropFilter: "blur(8px)",
-          WebkitBackdropFilter: "blur(8px)",
-        }}
-      >
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead
+    <div style={{ fontFamily: SANS }}>
+      {/* Header band — Swiss-grid layout: title left, dataset stats right,
+          filter row below */}
+      <div className="mb-10">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5 mb-8">
+          <div>
+            <div
               style={{
-                background: "rgba(255, 255, 255, 0.025)",
-                borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
+                fontSize: 10,
+                color: "rgba(255, 255, 255, 0.35)",
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                marginBottom: 8,
+                fontFamily: SANS,
               }}
             >
-              <tr className="text-left text-white/45 text-[10px] uppercase tracking-[0.12em]">
-                <th className="px-4 py-3 w-12" aria-label="Status"></th>
-                <th
-                  className="px-4 py-3 cursor-pointer select-none hover:text-white/80 transition"
-                  onClick={() => toggleSort("name")}
-                  aria-sort={
-                    sortKey === "name"
-                      ? sortDir === "asc"
-                        ? "ascending"
-                        : "descending"
-                      : "none"
-                  }
-                >
-                  Repository{" "}
-                  <span style={{ color: CYAN }}>{sortIndicator("name")}</span>
-                </th>
-                <th className="px-4 py-3">Section</th>
-                <th
-                  className="px-4 py-3 text-right cursor-pointer select-none hover:text-white/80 transition"
-                  onClick={() => toggleSort("stars")}
-                  aria-sort={
-                    sortKey === "stars"
-                      ? sortDir === "asc"
-                        ? "ascending"
-                        : "descending"
-                      : "none"
-                  }
-                >
-                  <span style={{ color: CYAN }}>{sortIndicator("stars")}</span>{" "}
-                  Stars
-                </th>
-                <th className="px-4 py-3">Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan={5}
-                    className="px-4 py-10 text-center text-white/40 text-sm"
-                  >
-                    No repositories match your filters.{" "}
-                    <button
-                      type="button"
-                      onClick={resetFilters}
-                      style={{ color: CYAN, textDecoration: "underline" }}
-                    >
-                      Reset
-                    </button>
-                  </td>
-                </tr>
-              ) : (
-                rows.map((s) => (
-                  <tr
-                    key={`${s.user}/${s.repo}`}
-                    className="transition"
-                    style={{
-                      borderTop: "1px solid rgba(255, 255, 255, 0.04)",
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLElement).style.background =
-                        "rgba(255, 255, 255, 0.025)";
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLElement).style.background =
-                        "transparent";
-                    }}
-                  >
-                    <td className="px-4 py-3">
-                      <span
-                        className="inline-block w-2 h-2 rounded-full"
-                        style={{
-                          background: STATUS_COLOR[s.status],
-                          boxShadow: `0 0 8px ${STATUS_COLOR[s.status]}`,
-                        }}
-                        title={STATUS_LABEL[s.status]}
-                        aria-label={STATUS_LABEL[s.status]}
-                      />
-                    </td>
-                    <td className="px-4 py-3 whitespace-nowrap">
-                      <a
-                        href={s.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-white transition"
-                        onMouseEnter={(e) =>
-                          ((e.currentTarget as HTMLElement).style.color = CYAN)
-                        }
-                        onMouseLeave={(e) =>
-                          ((e.currentTarget as HTMLElement).style.color =
-                            "white")
-                        }
-                      >
-                        {s.user}/{s.repo}{" "}
-                        <span className="text-white/25 text-xs">↗</span>
-                      </a>
-                    </td>
-                    <td className="px-4 py-3 text-white/50 whitespace-nowrap text-xs">
-                      {s.section}
-                    </td>
-                    <td
-                      className="px-4 py-3 text-right text-white/85"
-                      style={{ fontVariantNumeric: "tabular-nums" }}
-                    >
-                      {s.stars !== null ? s.stars.toLocaleString() : "—"}
-                    </td>
-                    <td className="px-4 py-3 text-white/65 max-w-xl">
-                      {s.description}
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+              JAXlaxy · Dataset
+            </div>
+            <h1
+              style={{
+                fontSize: 26,
+                fontWeight: 600,
+                fontFamily: 'var(--font-display)',
+                letterSpacing: "-0.01em",
+                color: "white",
+                margin: 0,
+              }}
+            >
+              Repository Index
+            </h1>
+          </div>
+
+          {/* Stats block, right-aligned, monospaced — feels like a data readout */}
+          <div
+            style={{
+              display: "flex",
+              gap: 24,
+              fontFamily: MONO,
+              fontSize: 11,
+            }}
+          >
+            <Stat label="Total" value={galaxy.stars.length.toString()} />
+            <Stat label="Showing" value={rows.length.toString()} accent />
+            <Stat
+              label="Generated"
+              value={new Date(galaxy.generated_at)
+                .toISOString()
+                .slice(0, 10)}
+            />
+          </div>
         </div>
+
+        {/* Filter row: search on left, pills on right */}
+        <div className="flex flex-col lg:flex-row gap-5 lg:items-center">
+          <div className="w-full lg:w-80 flex-shrink-0">
+            <div
+              style={{
+                fontSize: 9,
+                color: "rgba(255, 255, 255, 0.4)",
+                letterSpacing: "0.15em",
+                textTransform: "uppercase",
+                marginBottom: 4,
+                fontFamily: SANS,
+              }}
+            >
+              Search
+            </div>
+            <input
+              type="search"
+              placeholder="Filter by name or description…"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onFocus={() => setQueryFocused(true)}
+              onBlur={() => setQueryFocused(false)}
+              style={inputStyle}
+              aria-label="Search repositories"
+            />
+          </div>
+
+          <div className="flex-1 min-w-0">
+            <div
+              style={{
+                fontSize: 9,
+                color: "rgba(255, 255, 255, 0.4)",
+                letterSpacing: "0.15em",
+                textTransform: "uppercase",
+                marginBottom: 6,
+                fontFamily: SANS,
+              }}
+            >
+              Section
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              <button
+                type="button"
+                onClick={() => setSelectedSection(null)}
+                style={pill(selectedSection === null)}
+              >
+                All
+              </button>
+              {sections.map((section) => (
+                <button
+                  type="button"
+                  key={section}
+                  onClick={() =>
+                    setSelectedSection(
+                      selectedSection === section ? null : section,
+                    )
+                  }
+                  style={pill(selectedSection === section)}
+                >
+                  {section}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Scientific-paper table — no outer container, flat on the page,
+          only faint per-row bottom dividers. */}
+      <div className="overflow-x-auto">
+        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <thead>
+            <tr
+              style={{
+                borderBottom: "1px solid rgba(255, 255, 255, 0.12)",
+              }}
+            >
+              <th style={thStyle({ width: 36 })} aria-label="Status"></th>
+              <th
+                style={thStyle({ sortable: true })}
+                onClick={() => toggleSort("name")}
+                aria-sort={
+                  sortKey === "name"
+                    ? sortDir === "asc"
+                      ? "ascending"
+                      : "descending"
+                    : "none"
+                }
+              >
+                Repository{" "}
+                <span style={{ color: ACCENT, marginLeft: 4 }}>
+                  {sortIndicator("name")}
+                </span>
+              </th>
+              <th style={thStyle()}>Section</th>
+              <th
+                style={thStyle({ align: "right", sortable: true })}
+                onClick={() => toggleSort("stars")}
+                aria-sort={
+                  sortKey === "stars"
+                    ? sortDir === "asc"
+                      ? "ascending"
+                      : "descending"
+                    : "none"
+                }
+              >
+                <span style={{ color: ACCENT, marginRight: 4 }}>
+                  {sortIndicator("stars")}
+                </span>
+                Stars
+              </th>
+              <th style={thStyle()}>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={5}
+                  style={{
+                    padding: "48px 0",
+                    textAlign: "center",
+                    color: "rgba(255, 255, 255, 0.4)",
+                    fontSize: 12,
+                    fontFamily: SANS,
+                  }}
+                >
+                  No repositories match your filters.{" "}
+                  <button
+                    type="button"
+                    onClick={resetFilters}
+                    style={{
+                      color: ACCENT,
+                      textDecoration: "underline",
+                      fontFamily: SANS,
+                      fontSize: 12,
+                    }}
+                  >
+                    Reset
+                  </button>
+                </td>
+              </tr>
+            ) : (
+              rows.map((s) => <Row key={`${s.user}/${s.repo}`} star={s} />)
+            )}
+          </tbody>
+        </table>
       </div>
 
       {/* Footer hint */}
-      <p className="mt-4 text-xs text-white/30 text-center">
+      <div
+        style={{
+          marginTop: 40,
+          paddingTop: 16,
+          borderTop: "1px solid rgba(255, 255, 255, 0.06)",
+          textAlign: "center",
+          fontSize: 10,
+          color: "rgba(255, 255, 255, 0.3)",
+          letterSpacing: "0.08em",
+          textTransform: "uppercase",
+          fontFamily: SANS,
+        }}
+      >
         Prefer the spatial view?{" "}
         <a
           href="/"
-          className="transition"
-          style={{ color: "rgba(255, 255, 255, 0.55)" }}
+          style={{
+            color: "rgba(255, 255, 255, 0.55)",
+            textDecoration: "none",
+            transition: "color 120ms ease",
+            marginLeft: 8,
+          }}
           onMouseEnter={(e) =>
-            ((e.currentTarget as HTMLElement).style.color = CYAN)
+            ((e.currentTarget as HTMLElement).style.color = ACCENT)
           }
           onMouseLeave={(e) =>
             ((e.currentTarget as HTMLElement).style.color =
               "rgba(255, 255, 255, 0.55)")
           }
         >
-          Return to the Galaxy Map →
+          → Galaxy Map
         </a>
-      </p>
+      </div>
+    </div>
+  );
+}
+
+// —— helpers ————————————————————————————————
+
+function thStyle(opts: {
+  width?: number;
+  align?: "left" | "right";
+  sortable?: boolean;
+} = {}): CSSProperties {
+  return {
+    padding: "10px 12px",
+    textAlign: opts.align ?? "left",
+    width: opts.width,
+    fontSize: 9,
+    fontWeight: 500,
+    color: "rgba(255, 255, 255, 0.4)",
+    letterSpacing: "0.15em",
+    textTransform: "uppercase",
+    fontFamily: SANS,
+    cursor: opts.sortable ? "pointer" : "default",
+    userSelect: opts.sortable ? "none" : "auto",
+    whiteSpace: "nowrap",
+  };
+}
+
+const TD_BASE: CSSProperties = {
+  padding: "10px 12px",
+  fontFamily: SANS,
+  fontSize: 12,
+  borderBottom: "1px solid rgba(255, 255, 255, 0.04)",
+};
+
+function Row({ star }: { star: Star }) {
+  const [hovered, setHovered] = useState(false);
+  const rowStyle: CSSProperties = {
+    transition: "background 120ms ease",
+    background: hovered ? "rgba(255, 255, 255, 0.02)" : "transparent",
+  };
+
+  return (
+    <tr
+      style={rowStyle}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <td style={TD_BASE}>
+        <span
+          style={{
+            display: "inline-block",
+            width: 6,
+            height: 6,
+            borderRadius: "50%",
+            background: STATUS_COLOR[star.status],
+            boxShadow: `0 0 4px ${STATUS_COLOR[star.status]}`,
+          }}
+          title={STATUS_LABEL[star.status]}
+          aria-label={STATUS_LABEL[star.status]}
+        />
+      </td>
+      <td
+        style={{
+          ...TD_BASE,
+          fontFamily: MONO,
+          whiteSpace: "nowrap",
+        }}
+      >
+        <a
+          href={star.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            color: "white",
+            textDecoration: "none",
+            transition: "color 120ms ease",
+          }}
+          onMouseEnter={(e) =>
+            ((e.currentTarget as HTMLElement).style.color = ACCENT)
+          }
+          onMouseLeave={(e) =>
+            ((e.currentTarget as HTMLElement).style.color = "white")
+          }
+        >
+          {star.user}/{star.repo}
+          <span
+            style={{
+              color: "rgba(255, 255, 255, 0.2)",
+              marginLeft: 4,
+              fontSize: 10,
+            }}
+          >
+            ↗
+          </span>
+        </a>
+      </td>
+      <td
+        style={{
+          ...TD_BASE,
+          color: "rgba(255, 255, 255, 0.5)",
+          fontSize: 11,
+          whiteSpace: "nowrap",
+          letterSpacing: "0.02em",
+        }}
+      >
+        {star.section}
+      </td>
+      <td
+        style={{
+          ...TD_BASE,
+          fontFamily: MONO,
+          textAlign: "right",
+          color: "rgba(255, 255, 255, 0.9)",
+          fontVariantNumeric: "tabular-nums",
+          whiteSpace: "nowrap",
+        }}
+      >
+        {star.stars !== null ? star.stars.toLocaleString() : "—"}
+      </td>
+      <td
+        style={{
+          ...TD_BASE,
+          color: "rgba(255, 255, 255, 0.68)",
+          maxWidth: 520,
+          lineHeight: 1.5,
+        }}
+      >
+        {star.description}
+      </td>
+    </tr>
+  );
+}
+
+function Stat({
+  label,
+  value,
+  accent,
+}: {
+  label: string;
+  value: string;
+  accent?: boolean;
+}) {
+  return (
+    <div>
+      <div
+        style={{
+          fontSize: 9,
+          color: "rgba(255, 255, 255, 0.4)",
+          letterSpacing: "0.12em",
+          textTransform: "uppercase",
+          fontFamily: SANS,
+          marginBottom: 2,
+        }}
+      >
+        {label}
+      </div>
+      <div
+        style={{
+          color: accent ? ACCENT : "rgba(255, 255, 255, 0.9)",
+          fontVariantNumeric: "tabular-nums",
+        }}
+      >
+        {value}
+      </div>
     </div>
   );
 }
