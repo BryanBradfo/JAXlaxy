@@ -6,7 +6,7 @@ import type { Group } from "three";
 import type { Galaxy as GalaxyData } from "../types/galaxy";
 import { StarField, type PositionedStar } from "./StarField";
 import { Nebula } from "./Nebula";
-import { CosmicCore } from "./CosmicCore";
+import { GalacticNucleus } from "./GalacticNucleus";
 import { StarCard } from "./StarCard";
 
 function useMediaQuery(query: string): boolean {
@@ -118,7 +118,10 @@ export default function Galaxy() {
         <ambientLight intensity={0.05} />
         <directionalLight position={[20, 20, 10]} intensity={0.08} />
 
-        <CosmicCore />
+        {/* Holographic nucleus anchored at origin — the XLA/JAX core the
+            galaxy revolves around. Its point light catches the rim of nearby
+            stars, selling "the nucleus illuminates the constellations." */}
+        <GalacticNucleus />
         <AutoRotator paused={selectedStar !== null}>
           {data ? (
             <StarField

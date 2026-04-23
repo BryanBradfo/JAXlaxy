@@ -109,7 +109,7 @@ export default function TableController() {
         <br />
         <span style={{ marginTop: 8, display: "inline-block" }}>
           Generate with{" "}
-          <code style={{ fontFamily: MONO, color: ACCENT }}>
+          <code style={{ fontFamily: MONO, color: "rgba(255, 255, 255, 0.85)" }}>
             python scripts/health_check.py --json observatory/public/galaxy.json
           </code>
         </span>
@@ -150,18 +150,19 @@ export default function TableController() {
     transition: "border-color 120ms ease",
   };
 
+  // Pills — small, sharp-cornered (2px), high-density.
   const pill = (active: boolean): CSSProperties => ({
-    padding: "4px 10px",
-    borderRadius: 3,
+    padding: "3px 7px",
+    borderRadius: 2,
     fontSize: 10,
     border: active
       ? `1px solid ${ACCENT}`
       : "1px solid rgba(255, 255, 255, 0.1)",
     background: active ? "rgba(125, 211, 252, 0.08)" : "transparent",
-    color: active ? ACCENT : "rgba(255, 255, 255, 0.55)",
+    color: active ? ACCENT : "rgba(255, 255, 255, 0.5)",
     cursor: "pointer",
     whiteSpace: "nowrap",
-    letterSpacing: "0.05em",
+    letterSpacing: "0.04em",
     textTransform: "uppercase",
     fontFamily: SANS,
     fontWeight: 500,
@@ -173,10 +174,9 @@ export default function TableController() {
 
   return (
     <div style={{ fontFamily: SANS }}>
-      {/* Header band — Swiss-grid layout: title left, dataset stats right,
-          filter row below */}
+      {/* Header band — Swiss-grid layout */}
       <div className="mb-10">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5 mb-8">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5 mb-10">
           <div>
             <div
               style={{
@@ -194,7 +194,7 @@ export default function TableController() {
               style={{
                 fontSize: 26,
                 fontWeight: 600,
-                fontFamily: 'var(--font-display)',
+                fontFamily: "var(--font-display)",
                 letterSpacing: "-0.01em",
                 color: "white",
                 margin: 0,
@@ -204,17 +204,17 @@ export default function TableController() {
             </h1>
           </div>
 
-          {/* Stats block, right-aligned, monospaced — feels like a data readout */}
+          {/* Stats block — monochrome. Data readout feel, no accent. */}
           <div
             style={{
               display: "flex",
-              gap: 24,
+              gap: 28,
               fontFamily: MONO,
               fontSize: 11,
             }}
           >
             <Stat label="Total" value={galaxy.stars.length.toString()} />
-            <Stat label="Showing" value={rows.length.toString()} accent />
+            <Stat label="Showing" value={rows.length.toString()} />
             <Stat
               label="Generated"
               value={new Date(galaxy.generated_at)
@@ -224,8 +224,8 @@ export default function TableController() {
           </div>
         </div>
 
-        {/* Filter row: search on left, pills on right */}
-        <div className="flex flex-col lg:flex-row gap-5 lg:items-center">
+        {/* Filter row */}
+        <div className="flex flex-col lg:flex-row gap-6 lg:items-center">
           <div className="w-full lg:w-80 flex-shrink-0">
             <div
               style={{
@@ -233,7 +233,7 @@ export default function TableController() {
                 color: "rgba(255, 255, 255, 0.4)",
                 letterSpacing: "0.15em",
                 textTransform: "uppercase",
-                marginBottom: 4,
+                marginBottom: 6,
                 fontFamily: SANS,
               }}
             >
@@ -291,8 +291,7 @@ export default function TableController() {
         </div>
       </div>
 
-      {/* Scientific-paper table — no outer container, flat on the page,
-          only faint per-row bottom dividers. */}
+      {/* Airy scientific-paper table */}
       <div className="overflow-x-auto">
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
@@ -344,7 +343,7 @@ export default function TableController() {
                 <td
                   colSpan={5}
                   style={{
-                    padding: "48px 0",
+                    padding: "56px 0",
                     textAlign: "center",
                     color: "rgba(255, 255, 255, 0.4)",
                     fontSize: 12,
@@ -356,7 +355,7 @@ export default function TableController() {
                     type="button"
                     onClick={resetFilters}
                     style={{
-                      color: ACCENT,
+                      color: "rgba(255, 255, 255, 0.85)",
                       textDecoration: "underline",
                       fontFamily: SANS,
                       fontSize: 12,
@@ -373,11 +372,11 @@ export default function TableController() {
         </table>
       </div>
 
-      {/* Footer hint */}
+      {/* Footer hint — monochrome, subtle */}
       <div
         style={{
-          marginTop: 40,
-          paddingTop: 16,
+          marginTop: 48,
+          paddingTop: 18,
           borderTop: "1px solid rgba(255, 255, 255, 0.06)",
           textAlign: "center",
           fontSize: 10,
@@ -397,7 +396,8 @@ export default function TableController() {
             marginLeft: 8,
           }}
           onMouseEnter={(e) =>
-            ((e.currentTarget as HTMLElement).style.color = ACCENT)
+            ((e.currentTarget as HTMLElement).style.color =
+              "rgba(255, 255, 255, 0.9)")
           }
           onMouseLeave={(e) =>
             ((e.currentTarget as HTMLElement).style.color =
@@ -434,8 +434,9 @@ function thStyle(opts: {
   };
 }
 
+// Airy row padding — 14px vertical matches scientific-paper \arraystretch=1.2
 const TD_BASE: CSSProperties = {
-  padding: "10px 12px",
+  padding: "14px 12px",
   fontFamily: SANS,
   fontSize: 12,
   borderBottom: "1px solid rgba(255, 255, 255, 0.04)",
@@ -480,15 +481,16 @@ function Row({ star }: { star: Star }) {
           target="_blank"
           rel="noopener noreferrer"
           style={{
-            color: "white",
+            color: "rgba(255, 255, 255, 0.9)",
             textDecoration: "none",
             transition: "color 120ms ease",
           }}
           onMouseEnter={(e) =>
-            ((e.currentTarget as HTMLElement).style.color = ACCENT)
+            ((e.currentTarget as HTMLElement).style.color = "white")
           }
           onMouseLeave={(e) =>
-            ((e.currentTarget as HTMLElement).style.color = "white")
+            ((e.currentTarget as HTMLElement).style.color =
+              "rgba(255, 255, 255, 0.9)")
           }
         >
           {star.user}/{star.repo}
@@ -531,7 +533,7 @@ function Row({ star }: { star: Star }) {
           ...TD_BASE,
           color: "rgba(255, 255, 255, 0.68)",
           maxWidth: 520,
-          lineHeight: 1.5,
+          lineHeight: 1.55,
         }}
       >
         {star.description}
@@ -540,15 +542,7 @@ function Row({ star }: { star: Star }) {
   );
 }
 
-function Stat({
-  label,
-  value,
-  accent,
-}: {
-  label: string;
-  value: string;
-  accent?: boolean;
-}) {
+function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <div
@@ -565,7 +559,7 @@ function Stat({
       </div>
       <div
         style={{
-          color: accent ? ACCENT : "rgba(255, 255, 255, 0.9)",
+          color: "rgba(255, 255, 255, 0.9)",
           fontVariantNumeric: "tabular-nums",
         }}
       >

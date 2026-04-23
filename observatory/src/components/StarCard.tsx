@@ -8,12 +8,9 @@ interface Props {
   onClose: () => void;
 }
 
-const ACCENT = "#7dd3fc";
 const MONO = '"JetBrains Mono", ui-monospace, "SF Mono", monospace';
 const SANS = '"Inter", system-ui, sans-serif';
 
-// Map status emoji → precision-instrument status dot colors. Same palette
-// as the 3D scene so the card is unambiguously "this IS that star."
 const STATUS_COLOR: Record<Status, string> = {
   "🟢": "#39ff88",
   "🟡": "#ffd93d",
@@ -32,11 +29,11 @@ const CARD_STYLE: CSSProperties = {
   right: 20,
   width: 380,
   maxWidth: "calc(100vw - 40px)",
-  background: "rgba(5, 8, 15, 0.92)",
+  background: "rgba(5, 8, 15, 0.94)",
   backdropFilter: "blur(24px) saturate(160%)",
   WebkitBackdropFilter: "blur(24px) saturate(160%)",
   border: "1px solid rgba(255, 255, 255, 0.09)",
-  borderRadius: 4,
+  borderRadius: 2,
   boxShadow:
     "0 20px 48px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.02) inset",
   transition: "opacity 240ms ease, transform 240ms ease",
@@ -56,7 +53,7 @@ const CLOSE_BUTTON_STYLE: CSSProperties = {
   justifyContent: "center",
   background: "transparent",
   border: "1px solid rgba(255, 255, 255, 0.1)",
-  borderRadius: 3,
+  borderRadius: 2,
   color: "rgba(255, 255, 255, 0.5)",
   cursor: "pointer",
   fontSize: 14,
@@ -65,24 +62,20 @@ const CLOSE_BUTTON_STYLE: CSSProperties = {
   transition: "background 120ms ease, color 120ms ease, border-color 120ms ease",
 };
 
-const LAUNCH_BUTTON_STYLE: CSSProperties = {
+// Launch = plain text link with a bottom rule, not a button. Subtle
+// hover lifts color + underline to full white.
+const LAUNCH_LINK_STYLE: CSSProperties = {
   display: "inline-flex",
   alignItems: "center",
-  justifyContent: "center",
-  gap: 6,
-  padding: "7px 12px",
-  background: "transparent",
-  border: "1px solid rgba(125, 211, 252, 0.35)",
-  color: ACCENT,
-  borderRadius: 3,
+  gap: 4,
+  color: "rgba(255, 255, 255, 0.75)",
   textDecoration: "none",
   fontSize: 11,
-  fontWeight: 500,
-  letterSpacing: "0.05em",
-  textTransform: "uppercase",
+  letterSpacing: "0.04em",
   fontFamily: SANS,
-  transition:
-    "background 140ms ease, border-color 140ms ease, color 140ms ease",
+  borderBottom: "1px solid rgba(255, 255, 255, 0.2)",
+  paddingBottom: 1,
+  transition: "color 120ms ease, border-color 120ms ease",
 };
 
 export function StarCard({ star, onClose }: Props) {
@@ -112,12 +105,11 @@ export function StarCard({ star, onClose }: Props) {
   };
 
   const launchStyle: CSSProperties = {
-    ...LAUNCH_BUTTON_STYLE,
+    ...LAUNCH_LINK_STYLE,
     ...(launchHover
       ? {
-          background: "rgba(125, 211, 252, 0.08)",
-          borderColor: "rgba(125, 211, 252, 0.6)",
-          color: "#bae6fd",
+          color: "rgba(255, 255, 255, 0.98)",
+          borderBottomColor: "rgba(255, 255, 255, 0.55)",
         }
       : {}),
   };
@@ -148,7 +140,7 @@ export function StarCard({ star, onClose }: Props) {
             ×
           </button>
 
-          {/* Eyebrow: section label, uppercase, tracked, tiny */}
+          {/* Eyebrow: section label */}
           <div
             style={{
               fontSize: 9,
@@ -201,7 +193,7 @@ export function StarCard({ star, onClose }: Props) {
             </h3>
           </div>
 
-          {/* Description — Inter, 12px, tracked, muted */}
+          {/* Description */}
           {displayed.description && (
             <p
               style={{
@@ -227,12 +219,13 @@ export function StarCard({ star, onClose }: Props) {
             }}
           />
 
-          {/* Properties grid — two-column key/value rows */}
+          {/* Strict properties grid — keys uppercase SANS, values MONO.
+              Fixed 84px key column ensures value column aligns vertically. */}
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "76px 1fr",
-              gap: "6px 16px",
+              gridTemplateColumns: "84px 1fr",
+              gap: "8px 16px",
               marginBottom: 16,
               fontSize: 11,
             }}

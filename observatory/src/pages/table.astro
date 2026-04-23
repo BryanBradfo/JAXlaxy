@@ -6,13 +6,9 @@ import TableController from "../components/TableController.tsx";
 
 <Base title="Data Table — JAXlaxy Observatory">
   <div class="min-h-screen">
-    <NavHeader
-      active="table"
-      class="sticky top-0 z-20 backdrop-blur-xl"
-      style="background: rgba(0, 0, 0, 0.55); border-bottom: 1px solid rgba(255, 255, 255, 0.05);"
-    />
+    <NavHeader active="table" />
 
-    <main class="px-6 py-10 max-w-7xl mx-auto">
+    <main class="px-8 py-10 max-w-7xl mx-auto">
       <TableController client:load />
     </main>
   </div>

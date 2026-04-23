@@ -9,58 +9,50 @@ const { active = "map", class: className = "" } = Astro.props;
 const mapActive = active === "map";
 const tableActive = active === "table";
 
-// Masthead styling — deliberately small and restrained. The nav is the
-// only element that gets the teal accent; everything else is muted white.
-const navLinkBase =
-  "flex items-center gap-1.5 text-[12px] tracking-[0.04em] transition-colors";
-const navLinkActive = "text-white";
-const navLinkIdle = "text-white/45 hover:text-white/75";
+// Masthead — fully transparent, no background, no backdrop-filter.
+// Active state is a 1px Lab Blue underline; inactive links have a
+// transparent underline that tints white/20 on hover.
+const NAV_LINK_BASE =
+  "text-[13px] pb-0.5 border-b transition-colors tracking-[0.005em]";
+const NAV_LINK_IDLE = "text-white/45 hover:text-white/80 border-transparent hover:border-white/15";
+const NAV_LINK_ACTIVE = "text-white border-[#7dd3fc]";
 ---
 
 <header
   class:list={[
-    "px-6 h-14 flex items-center justify-between",
+    "px-6 h-14 flex items-center justify-between bg-transparent",
     className,
   ]}
+  style="font-family: var(--font-sans);"
 >
   <a
     href="/"
-    class="flex items-baseline gap-2 hover:opacity-90 transition-opacity"
-    style="font-family: var(--font-sans); letter-spacing: 0.01em;"
+    class="flex items-baseline gap-2 transition-opacity hover:opacity-90"
   >
     <span class="text-[13px] font-semibold text-white">JAXlaxy</span>
-    <span class="text-white/30">·</span>
-    <span class="text-[12px] text-white/60">Observatory</span>
+    <span class="text-[13px] font-light text-white/30">·</span>
+    <span class="text-[13px] font-normal text-white/60">Observatory</span>
   </a>
 
-  <nav class="flex items-center gap-6">
+  <nav class="flex items-center gap-7">
     <a
       href="/"
-      class:list={[navLinkBase, mapActive ? navLinkActive : navLinkIdle]}
+      class:list={[NAV_LINK_BASE, mapActive ? NAV_LINK_ACTIVE : NAV_LINK_IDLE]}
     >
-      {mapActive && (
-        <span
-          class="inline-block w-[5px] h-[5px] rounded-full"
-          style="background: var(--color-accent); box-shadow: 0 0 6px var(--color-accent);"
-        ></span>
-      )}
       Map
     </a>
     <a
       href="/table"
-      class:list={[navLinkBase, tableActive ? navLinkActive : navLinkIdle]}
+      class:list={[
+        NAV_LINK_BASE,
+        tableActive ? NAV_LINK_ACTIVE : NAV_LINK_IDLE,
+      ]}
     >
-      {tableActive && (
-        <span
-          class="inline-block w-[5px] h-[5px] rounded-full"
-          style="background: var(--color-accent); box-shadow: 0 0 6px var(--color-accent);"
-        ></span>
-      )}
       Data Table
     </a>
     <a
       href="https://github.com/BryanBradfo/JAXlaxy"
-      class:list={[navLinkBase, navLinkIdle]}
+      class:list={[NAV_LINK_BASE, NAV_LINK_IDLE]}
       target="_blank"
       rel="noopener noreferrer"
     >
