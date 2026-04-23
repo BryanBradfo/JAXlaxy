@@ -1,21 +1,19 @@
 ---
 import Base from "../layouts/Base.astro";
+import NavHeader from "../components/NavHeader.astro";
+import TableController from "../components/TableController.tsx";
 ---
 
 <Base title="Data Table — JAXlaxy Observatory">
-  <main class="min-h-screen px-6 py-16 max-w-4xl mx-auto">
-    <header class="mb-8">
-      <h1 class="text-3xl font-semibold tracking-tight mb-2">
-        <span style="color: var(--color-cyan-neon)">Data Table</span>
-      </h1>
-      <p class="text-white/60">
-        Phase 1 stub — a sortable, filterable scannable table view is coming in a follow-up.
-      </p>
-    </header>
-    <nav class="text-sm">
-      <a href="/" class="text-[color:var(--color-cyan-neon)] hover:underline">
-        ← Back to the Galaxy Map
-      </a>
-    </nav>
-  </main>
+  <div class="min-h-screen">
+    <NavHeader
+      active="table"
+      class="sticky top-0 z-20 backdrop-blur-xl"
+      style="background: rgba(0, 0, 0, 0.55); border-bottom: 1px solid rgba(255, 255, 255, 0.05);"
+    />
+
+    <main class="px-6 py-10 max-w-7xl mx-auto">
+      <TableController client:load />
+    </main>
+  </div>
 </Base>
