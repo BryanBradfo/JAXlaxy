@@ -74,7 +74,7 @@ Every entry ships with a **health indicator** — 🟢 Active · 🟡 Stable · 
 * 🟡 **[safejax](https://github.com/alvarobartt/safejax)**: Serialize Flax / Haiku / Equinox parameters via `safetensors` — safer than pickling, portable across frameworks. <img src="https://img.shields.io/github/stars/alvarobartt/safejax?style=social" align="center">
 * 🟢 **[jax-tqdm](https://github.com/jeremiecoullon/jax-tqdm)**: Add a real progress bar to JIT-compiled `jax.lax.scan` and training loops — one decorator, zero friction. <img src="https://img.shields.io/github/stars/jeremiecoullon/jax-tqdm?style=social" align="center">
 * 🟢 **[JAX Toolbox](https://github.com/NVIDIA/JAX-Toolbox)**: NVIDIA's nightly CI and optimized container images for running JAX workloads on H100/B200 GPUs. <img src="https://img.shields.io/github/stars/NVIDIA/JAX-Toolbox?style=social" align="center">
-* 🟡 **[mpi4jax](https://github.com/PhilipVinc/mpi4jax)**: Zero-copy MPI collectives inside JIT-compiled JAX code — the bridge for classical HPC clusters. <img src="https://img.shields.io/github/stars/PhilipVinc/mpi4jax?style=social" align="center">
+* 🟢 **[mpi4jax](https://github.com/PhilipVinc/mpi4jax)**: Zero-copy MPI collectives inside JIT-compiled JAX code — the bridge for classical HPC clusters. <img src="https://img.shields.io/github/stars/PhilipVinc/mpi4jax?style=social" align="center">
 
 ---
 
@@ -121,13 +121,13 @@ Every entry ships with a **health indicator** — 🟢 Active · 🟡 Stable · 
 * 🟢 **[FDTDX](https://github.com/ymahlau/fdtdx)**: Finite-Difference Time-Domain electromagnetic simulation in JAX — design photonic devices with autograd. <img src="https://img.shields.io/github/stars/ymahlau/fdtdx?style=social" align="center">
 * 🟢 **[JaxDF](https://github.com/ucl-bug/jaxdf)**: Write differentiable PDE simulators with arbitrary discretizations — the building block for inverse-problem science. <img src="https://img.shields.io/github/stars/ucl-bug/jaxdf?style=social" align="center">
 * 🟢 **[JAX-in-Cell](https://github.com/uwplasma/JAX-in-Cell)**: Self-consistent particle-in-cell plasma simulations — classical HPC physics meets JAX autodiff. <img src="https://img.shields.io/github/stars/uwplasma/JAX-in-Cell?style=social" align="center">
-* 🟡 **[foragax](https://github.com/i-m-iron-man/Foragax)**: Agent-based modelling framework in JAX — fast, vectorized, auto-differentiable social and ecological sims. <img src="https://img.shields.io/github/stars/i-m-iron-man/Foragax?style=social" align="center">
+* 🟢 **[foragax](https://github.com/i-m-iron-man/Foragax)**: Agent-based modelling framework in JAX — fast, vectorized, auto-differentiable social and ecological sims. <img src="https://img.shields.io/github/stars/i-m-iron-man/Foragax?style=social" align="center">
 
 ### 🔭 Cosmology & Astrophysics
 
 * 🟢 **[jax-cosmo](https://github.com/DifferentiableUniverseInitiative/jax_cosmo)**: Differentiable cosmology — end-to-end gradients through large-scale-structure likelihoods. <img src="https://img.shields.io/github/stars/DifferentiableUniverseInitiative/jax_cosmo?style=social" align="center">
 * 🟢 **[astronomix](https://github.com/leo1200/astronomix)**: Differentiable (magneto)hydrodynamics for astrophysics — simulate galaxy-scale flows with autograd. <img src="https://img.shields.io/github/stars/leo1200/astronomix?style=social" align="center">
-* 🟡 **[exojax](https://github.com/HajimeKawahara/exojax)**: Automatically differentiable spectrum modelling of exoplanets and brown dwarfs. <img src="https://img.shields.io/github/stars/HajimeKawahara/exojax?style=social" align="center">
+* 🟢 **[exojax](https://github.com/HajimeKawahara/exojax)**: Automatically differentiable spectrum modelling of exoplanets and brown dwarfs. <img src="https://img.shields.io/github/stars/HajimeKawahara/exojax?style=social" align="center">
 
 ### 📡 Imaging, Signals & Tomography
 
