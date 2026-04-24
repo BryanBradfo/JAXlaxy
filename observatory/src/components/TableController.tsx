@@ -152,16 +152,19 @@ export default function TableController() {
     transition: "border-color 120ms ease",
   };
 
-  // Pills — small, sharp-cornered (2px), high-density.
+  // Pills — small, sharp-cornered (2px), high-density. Selected state is
+  // purely monochrome: brighter text + a whisper of white fill + a slightly
+  // stronger gray border. No accent color — hierarchy via opacity layering,
+  // the way Google Scholar / Material 3 filter chips on dark surfaces read.
   const pill = (active: boolean): CSSProperties => ({
     padding: "3px 7px",
     borderRadius: 2,
     fontSize: 10,
     border: active
-      ? `1px solid ${ACCENT}`
+      ? "1px solid rgba(255, 255, 255, 0.28)"
       : "1px solid rgba(255, 255, 255, 0.1)",
-    background: active ? "rgba(125, 211, 252, 0.08)" : "transparent",
-    color: active ? ACCENT : "rgba(255, 255, 255, 0.5)",
+    background: active ? "rgba(255, 255, 255, 0.08)" : "transparent",
+    color: active ? "rgba(255, 255, 255, 0.95)" : "rgba(255, 255, 255, 0.5)",
     cursor: "pointer",
     whiteSpace: "nowrap",
     letterSpacing: "0.04em",
