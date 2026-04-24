@@ -30,3 +30,31 @@ body {
   background: var(--color-accent);
   color: var(--color-void);
 }
+
+/* Inline-markdown styles used by parseInlineMd in src/lib/inlineMarkdown.tsx.
+   These are consumed by the Table description column and the StarCard's
+   description paragraph. Designed to compose with either base text color
+   — they shift brightness relative to the parent, not absolute values. */
+.md-strong {
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 600;
+}
+
+.md-em {
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.md-link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+  text-decoration-color: rgba(255, 255, 255, 0.3);
+  transition: text-decoration-color 120ms ease, color 120ms ease;
+}
+
+.md-link:hover {
+  color: rgba(255, 255, 255, 0.95);
+  text-decoration-color: rgba(255, 255, 255, 0.7);
+}

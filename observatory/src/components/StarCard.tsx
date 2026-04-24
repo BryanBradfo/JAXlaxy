@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { CSSProperties, MouseEvent } from "react";
 import type { PositionedStar } from "./StarField";
 import type { Status } from "../types/galaxy";
+import { parseInlineMd } from "../lib/inlineMarkdown";
 
 interface Props {
   star: PositionedStar | null;
@@ -206,7 +207,7 @@ export function StarCard({ star, onClose }: Props) {
                 letterSpacing: "0.01em",
               }}
             >
-              {displayed.description}
+              {parseInlineMd(displayed.description)}
             </p>
           )}
 

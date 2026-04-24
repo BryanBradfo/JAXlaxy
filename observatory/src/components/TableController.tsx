@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { CSSProperties } from "react";
 import type { Galaxy, Star, Status } from "../types/galaxy";
+import { parseInlineMd } from "../lib/inlineMarkdown";
 
 type SortKey = "stars" | "name";
 type SortDir = "asc" | "desc";
@@ -541,7 +542,7 @@ function Row({ star }: { star: Star }) {
           lineHeight: 1.55,
         }}
       >
-        {star.description}
+        {parseInlineMd(star.description)}
       </td>
     </tr>
   );
