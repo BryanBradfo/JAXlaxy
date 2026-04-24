@@ -47,7 +47,9 @@ export default function TableController() {
   const [queryFocused, setQueryFocused] = useState(false);
 
   useEffect(() => {
-    fetch("/galaxy.json")
+    // Route through Astro's BASE_URL so this works in dev (base=/) and
+    // under the production sub-path (base=/JAXlaxy/).
+    fetch(`${import.meta.env.BASE_URL}galaxy.json`)
       .then((r) => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.json() as Promise<Galaxy>;
@@ -388,7 +390,7 @@ export default function TableController() {
       >
         Prefer the spatial view?{" "}
         <a
-          href="/"
+          href={import.meta.env.BASE_URL}
           style={{
             color: "rgba(255, 255, 255, 0.55)",
             textDecoration: "none",

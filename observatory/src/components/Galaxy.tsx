@@ -8,6 +8,7 @@ import { StarField, type PositionedStar } from "./StarField";
 import { Nebula } from "./Nebula";
 import { GalacticNucleus } from "./GalacticNucleus";
 import { StarCard } from "./StarCard";
+import { PathfinderInput } from "./PathfinderInput";
 
 function useMediaQuery(query: string): boolean {
   const [matches, setMatches] = useState(false);
@@ -44,10 +45,13 @@ export default function Galaxy() {
   const [data, setData] = useState<GalaxyData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selectedStar, setSelectedStar] = useState<PositionedStar | null>(null);
+  const [pathfinderQuery, setPathfinderQuery] = useState("");
   const isMobile = useMediaQuery("(max-width: 640px)");
 
   useEffect(() => {
-    fetch("/galaxy.json")
+    // Route through Astro's BASE_URL so fetches work both at the dev server
+    // root (/galaxy.json) and when deployed under a sub-path (/JAXlaxy/galaxy.json).
+    fetch(`${import.meta.env.BASE_URL}galaxy.json`)
       .then((r) => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.json() as Promise<GalaxyData>;
@@ -69,7 +73,7 @@ export default function Galaxy() {
           <p className="text-white/60 text-sm leading-relaxed">
             The interactive 3D galaxy is optimized for a larger screen. The
             mobile experience is under construction — for now, the{" "}
-            <a href="/table" className="underline">
+            <a href={`${import.meta.env.BASE_URL}table`} className="underline">
               Data Table
             </a>{" "}
             gives you the full list.
@@ -95,6 +99,7 @@ export default function Galaxy() {
 
   return (
     <>
+      <PathfinderInput value={pathfinderQuery} onChange={setPathfinderQuery} />
       <Canvas
         camera={{ position: [0, 0, 85], fov: 55 }}
         gl={{ antialias: true }}
@@ -128,6 +133,7 @@ export default function Galaxy() {
               stars={data.stars}
               selectedStar={selectedStar}
               onSelect={setSelectedStar}
+              query={pathfinderQuery}
             />
           ) : null}
         </AutoRotator>

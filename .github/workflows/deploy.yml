@@ -1,0 +1,58 @@
+name: Deploy Observatory
+
+on:
+  # Human pushes to main — typical feature merge path.
+  push:
+    branches: [main]
+    paths:
+      - "observatory/**"
+      - ".github/workflows/deploy.yml"
+  # Manual re-deploy from the Actions tab, useful for testing.
+  workflow_dispatch:
+  # Automatic redeploy when the weekly health-check committed a fresh
+  # galaxy.json. workflow_run fires when the upstream workflow *completes*,
+  # bypassing the default "commits made by GITHUB_TOKEN don't trigger other
+  # workflows" rule that would otherwise leave the deploy stale.
+  workflow_run:
+    workflows: ["Health Check (Autopilot)"]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one deploy at a time; cancel in-progress runs when a new push lands.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build Astro site
+    runs-on: ubuntu-latest
+    # When triggered by workflow_run, only proceed if the upstream run succeeded.
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build and upload site
+        uses: withastro/action@v3
+        with:
+          path: ./observatory
+          package-manager: npm
+          node-version: "22"
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

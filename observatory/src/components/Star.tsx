@@ -25,6 +25,23 @@ function sizeFor(stars: number | null): number {
   return Math.log((stars ?? 100) + 1) * 0.06 + 0.1;
 }
 
+/**
+ * Substring match: every space-separated token in the query must appear as
+ * a literal substring of the haystack (repo slug + description + section).
+ * AND semantics across tokens, OR-less within each token — mirrors the
+ * Table page's search for consistency and matches user intuition ("typing
+ * `ott` should highlight `ott-jax`, not every entry containing o…t…t").
+ */
+function matchesQuery(
+  haystack: string,
+  rawQuery: string,
+): boolean {
+  const q = rawQuery.trim().toLowerCase();
+  if (!q) return true;
+  const hay = haystack.toLowerCase();
+  return q.split(/\s+/).every((token) => hay.includes(token));
+}
+
 // Distance (world units) below which a star's repo label fades in. Star
 // shell radius is 34–48u; default camera distance is 85u. At default zoom
 // only near-hemisphere stars cross this; as the user zooms in, more reveal.
@@ -63,15 +80,30 @@ interface StarProps {
   star: PositionedStar;
   isSelected: boolean;
   onSelect: (star: PositionedStar | null) => void;
+  query: string;
 }
 
-export function Star({ star, isSelected, onSelect }: StarProps) {
+export function Star({ star, isSelected, onSelect, query }: StarProps) {
   const groupRef = useRef<Group>(null);
   const meshRef = useRef<Mesh>(null);
   const [hovered, setHovered] = useState(false);
   const [nearEnough, setNearEnough] = useState(false);
   const palette = STATUS_PALETTE[star.status] ?? STATUS_PALETTE["🟡"];
   const baseSize = sizeFor(star.stars);
+
+  // Pathfinder spotlight: dim stars whose text doesn't match the query.
+  // Selected stars are exempt so a user's current focus never goes dark.
+  const haystack = useMemo(
+    () => `${star.user}/${star.repo} ${star.description ?? ""} ${star.section ?? ""}`,
+    [star],
+  );
+  const hasQuery = query.trim().length > 0;
+  const matches = useMemo(
+    () => matchesQuery(haystack, query),
+    [haystack, query],
+  );
+  const dimmed = hasQuery && !matches && !isSelected;
+  const dimFactor = dimmed ? 0.15 : 1;
 
   // Single Vector3 instance reused each frame for distance computation —
   // avoids GC pressure from allocating a new vector 60×/second per star.
@@ -111,15 +143,18 @@ export function Star({ star, isSelected, onSelect }: StarProps) {
 
   return (
     <group ref={groupRef} position={star.position}>
-      {/* Visible star */}
+      {/* Visible star — emissive composed from status palette × hover/select
+          multiplier × Pathfinder dim factor. */}
       <mesh ref={meshRef}>
         <sphereGeometry args={[1, 24, 24]} />
         <meshStandardMaterial
           color={palette.hex}
           emissive={palette.hex}
-          emissiveIntensity={palette.intensity * emissiveMultiplier}
+          emissiveIntensity={palette.intensity * emissiveMultiplier * dimFactor}
           roughness={0.3}
           metalness={0.1}
+          transparent
+          opacity={dimFactor}
         />
       </mesh>
 
@@ -158,16 +193,14 @@ export function Star({ star, isSelected, onSelect }: StarProps) {
         <meshBasicMaterial transparent opacity={0} depthWrite={false} />
       </mesh>
 
-      {/* Always-mounted label. Opacity is the only thing that animates —
-          the <Html> portal itself never unmounts, so the CSS transition
-          runs reliably on both enter and exit. */}
+      {/* Always-mounted label. Opacity composes visibility + Pathfinder dim. */}
       <Html
         position={[0, baseSize + 0.4, 0]}
         center
         zIndexRange={[100, 0]}
         style={{
           pointerEvents: "none",
-          opacity: showLabel ? 1 : 0,
+          opacity: showLabel ? dimFactor : 0,
           transition: "opacity 260ms ease",
         }}
       >

@@ -9,6 +9,12 @@ const { active = "map", class: className = "" } = Astro.props;
 const mapActive = active === "map";
 const tableActive = active === "table";
 
+// BASE_URL includes a trailing slash (e.g. "/JAXlaxy/" in prod, "/" in dev).
+// Concat without a leading slash on suffixes: `${base}table`, not `${base}/table`.
+const base = import.meta.env.BASE_URL;
+const mapHref = base;
+const tableHref = `${base}table`;
+
 // Masthead — fully transparent, no background, no backdrop-filter.
 // Active state is a 1px Lab Blue underline; inactive links have a
 // transparent underline that tints white/20 on hover.
@@ -26,7 +32,7 @@ const NAV_LINK_ACTIVE = "text-white border-[#7dd3fc]";
   style="font-family: var(--font-sans);"
 >
   <a
-    href="/"
+    href={mapHref}
     class="flex items-baseline gap-2 transition-opacity hover:opacity-90"
   >
     <span class="text-[13px] font-semibold text-white">JAXlaxy</span>
@@ -36,13 +42,13 @@ const NAV_LINK_ACTIVE = "text-white border-[#7dd3fc]";
 
   <nav class="flex items-center gap-7">
     <a
-      href="/"
+      href={mapHref}
       class:list={[NAV_LINK_BASE, mapActive ? NAV_LINK_ACTIVE : NAV_LINK_IDLE]}
     >
       Map
     </a>
     <a
-      href="/table"
+      href={tableHref}
       class:list={[
         NAV_LINK_BASE,
         tableActive ? NAV_LINK_ACTIVE : NAV_LINK_IDLE,

@@ -123,9 +123,15 @@ interface StarFieldProps {
   stars: StarData[];
   selectedStar: PositionedStar | null;
   onSelect: (star: PositionedStar | null) => void;
+  query: string;
 }
 
-export function StarField({ stars, selectedStar, onSelect }: StarFieldProps) {
+export function StarField({
+  stars,
+  selectedStar,
+  onSelect,
+  query,
+}: StarFieldProps) {
   const positioned = useMemo<PositionedStar[]>(() => {
     // Collect unique sections in order of first appearance (stable mapping).
     const sectionOrder: string[] = [];
@@ -206,6 +212,7 @@ export function StarField({ stars, selectedStar, onSelect }: StarFieldProps) {
             star={s}
             isSelected={selectedKey === key}
             onSelect={onSelect}
+            query={query}
           />
         );
       })}

@@ -23,7 +23,9 @@ import * as THREE from "three";
  * in darkness — reinforces depth).
  */
 
-const LOGO_PATH = "/core-logo.png";
+// Route through Astro's BASE_URL so the asset resolves correctly in dev
+// (base=/) and in production under the sub-path (base=/JAXlaxy/).
+const LOGO_PATH = `${import.meta.env.BASE_URL}core-logo.png`;
 const LOGO_SCALE = 4.5; // world units — sharp, dense core (not a giant sun)
 const AURA_SCALE = 8.5; // aura ~1.89× logo for soft halo (proportional to new logo size)
 
