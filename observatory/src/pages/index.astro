@@ -1,0 +1,24 @@
+---
+import Base from "../layouts/Base.astro";
+import NavHeader from "../components/NavHeader.astro";
+import Galaxy from "../components/Galaxy.tsx";
+---
+
+<Base>
+  <main class="relative min-h-screen">
+    <NavHeader active="map" class="absolute top-0 left-0 right-0 z-10" />
+
+    <div class="absolute inset-0">
+      <Galaxy client:load />
+    </div>
+
+    <div
+      class="absolute bottom-6 left-6 max-w-md text-xs text-white/50 leading-relaxed z-10 pointer-events-none"
+    >
+      <p>
+        Each glowing star is an entry from JAXlaxy's README. Size is proportional to GitHub stars; color indicates health
+        (🟢 active · 🟡 stable · 🔴 legacy). Drag to orbit, click to dive in.
+      </p>
+    </div>
+  </main>
+</Base>

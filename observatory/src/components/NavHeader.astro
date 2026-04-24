@@ -1,0 +1,68 @@
+---
+interface Props {
+  active?: "map" | "table";
+  class?: string;
+}
+
+const { active = "map", class: className = "" } = Astro.props;
+
+const mapActive = active === "map";
+const tableActive = active === "table";
+
+// BASE_URL includes a trailing slash (e.g. "/JAXlaxy/" in prod, "/" in dev).
+// Concat without a leading slash on suffixes: `${base}table`, not `${base}/table`.
+const base = import.meta.env.BASE_URL;
+const mapHref = base;
+const tableHref = `${base}table`;
+
+// Masthead — fully transparent, no background, no backdrop-filter.
+// Active state is a 1px Lab Blue underline; inactive links have a
+// transparent underline that tints white/20 on hover.
+const NAV_LINK_BASE =
+  "text-[13px] pb-0.5 border-b transition-colors tracking-[0.005em]";
+const NAV_LINK_IDLE = "text-white/45 hover:text-white/80 border-transparent hover:border-white/15";
+const NAV_LINK_ACTIVE = "text-white border-[#7dd3fc]";
+---
+
+<header
+  class:list={[
+    "px-6 h-14 flex items-center justify-between bg-transparent",
+    className,
+  ]}
+  style="font-family: var(--font-sans);"
+>
+  <a
+    href={mapHref}
+    class="flex items-baseline gap-2 transition-opacity hover:opacity-90"
+  >
+    <span class="text-[13px] font-semibold text-white">JAXlaxy</span>
+    <span class="text-[13px] font-light text-white/30">·</span>
+    <span class="text-[13px] font-normal text-white/60">Observatory</span>
+  </a>
+
+  <nav class="flex items-center gap-7">
+    <a
+      href={mapHref}
+      class:list={[NAV_LINK_BASE, mapActive ? NAV_LINK_ACTIVE : NAV_LINK_IDLE]}
+    >
+      Map
+    </a>
+    <a
+      href={tableHref}
+      class:list={[
+        NAV_LINK_BASE,
+        tableActive ? NAV_LINK_ACTIVE : NAV_LINK_IDLE,
+      ]}
+    >
+      Data Table
+    </a>
+    <a
+      href="https://github.com/BryanBradfo/JAXlaxy"
+      class:list={[NAV_LINK_BASE, NAV_LINK_IDLE]}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      GitHub
+    </a>
+  </nav>
+</header>

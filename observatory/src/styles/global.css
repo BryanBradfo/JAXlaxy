@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+@theme {
+  /* Base palette */
+  --color-void: #000000;
+  --color-accent: #7dd3fc; /* Lab Blue — calculated technical accent, replaces neon cyan */
+  --color-accent-dim: #7dd3fc33; /* 20% alpha for thin borders and subtle highlights */
+  --color-violet-electric: #8a2be2;
+
+  /* Typography stack — tri-font split matching research-dashboard conventions */
+  --font-display: "Space Grotesk", "Inter", system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono:
+    "JetBrains Mono", ui-monospace, "SF Mono", "Cascadia Code", Menlo,
+    Consolas, monospace;
+}
+
+html,
+body {
+  background: var(--color-void);
+  color: white;
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-void);
+}

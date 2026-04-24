@@ -7,7 +7,10 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  # Upgraded from read → write so the workflow can commit a refreshed
+  # galaxy.json back to the repo. deploy.yml picks up the push and
+  # automatically redeploys the Observatory with fresh data.
+  contents: write
   issues: write
 
 jobs:
@@ -29,9 +32,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Exit 1 means "flags detected" — our alert signal, not a job failure.
-          # We capture the code and let downstream steps decide what to do.
+          # --json refreshes the Observatory's data so the deployed site stays
+          # in sync with the latest audit.
           set +e
-          python scripts/health_check.py --output health_report.md
+          python scripts/health_check.py \
+            --output health_report.md \
+            --json observatory/public/galaxy.json
           echo "exit_code=$?" >> "$GITHUB_OUTPUT"
           set -e
 
@@ -42,6 +48,22 @@ jobs:
           name: health-report
           path: health_report.md
           retention-days: 30
+
+      - name: Commit refreshed galaxy.json
+        # Runs even when flags exist — fresh data should ship regardless of
+        # whether the audit is opening an alert. Skips cleanly when schema
+        # broke and no file was written, and when the file is byte-identical.
+        if: hashFiles('observatory/public/galaxy.json') != ''
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain observatory/public/galaxy.json)" ]; then
+            git add observatory/public/galaxy.json
+            git commit -m "chore: weekly galaxy.json refresh"
+            git push
+          else
+            echo "galaxy.json byte-identical — no commit needed."
+          fi
 
       - name: Open alert issue on flags
         if: steps.health.outputs.exit_code != '0' && hashFiles('health_report.md') != ''

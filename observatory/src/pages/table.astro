@@ -1,0 +1,15 @@
+---
+import Base from "../layouts/Base.astro";
+import NavHeader from "../components/NavHeader.astro";
+import TableController from "../components/TableController.tsx";
+---
+
+<Base title="Data Table — JAXlaxy Observatory">
+  <div class="min-h-screen">
+    <NavHeader active="table" />
+
+    <main class="px-8 py-10 max-w-7xl mx-auto">
+      <TableController client:load />
+    </main>
+  </div>
+</Base>
