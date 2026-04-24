@@ -6,15 +6,11 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
-  // Deployed at https://bryanbradfo.github.io/JAXlaxy/ via GitHub Pages.
-  // `base` feeds into `import.meta.env.BASE_URL` (trailing slash included)
-  // — all client-side fetches (galaxy.json) must route through it so they
-  // resolve correctly both in dev (base=/) and in production (base=/JAXlaxy/).
-  site: "https://bryanbradfo.github.io",
-  // Trailing slash required so `import.meta.env.BASE_URL` matches dev
-  // behavior (which always resolves to "/"). Without it, string concat
-  // like `${BASE_URL}galaxy.json` produces "/JAXlaxygalaxy.json".
-  base: "/JAXlaxy/",
+  // Deployed at https://jaxlaxy.vercel.app via Vercel (Hobby tier, free).
+  // `base` is intentionally unset — Vercel serves the site at root, so
+  // `import.meta.env.BASE_URL` resolves to "/" and all asset / fetch paths
+  // like `${BASE_URL}galaxy.json` work without sub-path prefixing.
+  site: "https://jaxlaxy.vercel.app",
   integrations: [react()],
   vite: {
     plugins: [tailwindcss()],
