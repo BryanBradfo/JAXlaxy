@@ -14,8 +14,11 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
+# Anchored to root so observatory/src/lib/ (Astro source code) isn't matched.
+# Python virtualenvs always create lib/ at project root, so /lib/ still serves
+# its original purpose without false-positives in nested project folders.
+/lib/
+/lib64/
 parts/
 sdist/
 var/
