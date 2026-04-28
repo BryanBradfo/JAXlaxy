@@ -11,9 +11,9 @@
 
 **JAXlaxy** is a curated, opinionated, and constantly updated map of the **JAX** ecosystem.
 
-In 2026, JAX has evolved from a research curiosity into the backbone of global AI. It powers the world's largest Foundation Models, real-time physics simulators, and structural biology breakthroughs. While the original DeepMind "JAX Ecosystem" post (2020) is a classic archive, the universe has expanded. **JAXlaxy** filters the noise to show you the brightest stars.
+JAX is now the backbone of large foundation-model training, differentiable physics, and structural biology research at DeepMind, Google Research, and beyond. The original 2020 "JAX Ecosystem" post is a useful archive but the landscape has changed substantially. **JAXlaxy** is a hand-picked, opinionated index of what's actually maintained in 2026.
 
-Every entry ships with a **health indicator** — 🟢 Active · 🟡 Stable · 🔴 Legacy — so you can tell at a glance whether a library is the right launchpad in 2026 or a relic better admired than flown.
+Every entry has a **health indicator** — 🟢 Active · 🟡 Stable · 🔴 Legacy — so you can quickly see whether a library is still being developed or has been superseded.
 
 ---
 
@@ -39,10 +39,10 @@ Every entry ships with a **health indicator** — 🟢 Active · 🟡 Stable · 
 
 *The foundational technologies that make high-performance JAX computing possible. If your stack has JAX, it has these.*
 
-* 🟢 **[JAX](https://github.com/jax-ml/jax)**: Autograd and XLA-powered numerical computing — the sun of our universe. <img src="https://img.shields.io/github/stars/jax-ml/jax?style=social" align="center">
+* 🟢 **[JAX](https://github.com/jax-ml/jax)**: Autograd and XLA-powered numerical computing. Almost everything below depends on it. <img src="https://img.shields.io/github/stars/jax-ml/jax?style=social" align="center">
 * 🟢 **[Pallas](https://jax.readthedocs.io/en/latest/pallas/index.html)**: JAX-native kernel authoring language for writing custom TPU/GPU kernels without leaving Python.
-* 🟢 **[OpenXLA](https://github.com/openxla/xla)**: The open-source compiler that turns your JAX program into blazing accelerator code. <img src="https://img.shields.io/github/stars/openxla/xla?style=social" align="center">
-* 🟢 **[torchax](https://github.com/google/torchax)**: Run PyTorch model code directly on JAX — the bridge for teams migrating in from the PyTorch universe. <img src="https://img.shields.io/github/stars/google/torchax?style=social" align="center">
+* 🟢 **[OpenXLA](https://github.com/openxla/xla)**: The open-source compiler that turns JAX programs into accelerator code. <img src="https://img.shields.io/github/stars/openxla/xla?style=social" align="center">
+* 🟢 **[torchax](https://github.com/google/torchax)**: Runs PyTorch model code directly on JAX. Useful when migrating PyTorch codebases incrementally. <img src="https://img.shields.io/github/stars/google/torchax?style=social" align="center">
 
 ---
 
@@ -52,9 +52,9 @@ Every entry ships with a **health indicator** — 🟢 Active · 🟡 Stable · 
 
 *The primary solar systems for building and training neural networks in JAX.*
 
-* 🟢 **[Flax (NNX)](https://github.com/google/flax)**: The 2026 standard for DeepMind and Google-scale research. NNX brings ergonomic object-oriented state on top of JAX's functional core. <img src="https://img.shields.io/github/stars/google/flax?style=social" align="center">
-* 🟢 **[Equinox](https://github.com/patrick-kidger/equinox)**: Everything is a PyTree. Minimal magic, maximum transparency — the default pick for scientific ML and PyTorch converts. <img src="https://img.shields.io/github/stars/patrick-kidger/equinox?style=social" align="center">
-* 🟢 **[Penzai](https://github.com/google-deepmind/penzai)**: DeepMind's toolkit for legible, introspectable, surgically-editable neural networks — the interpretability researcher's first choice. <img src="https://img.shields.io/github/stars/google-deepmind/penzai?style=social" align="center">
+* 🟢 **[Flax (NNX)](https://github.com/google/flax)**: The neural network library Google and DeepMind use internally. NNX adds object-oriented state management on top of JAX's functional core. <img src="https://img.shields.io/github/stars/google/flax?style=social" align="center">
+* 🟢 **[Equinox](https://github.com/patrick-kidger/equinox)**: Everything is a PyTree. Minimal abstractions; common in scientific ML and among PyTorch users moving to JAX. <img src="https://img.shields.io/github/stars/patrick-kidger/equinox?style=social" align="center">
+* 🟢 **[Penzai](https://github.com/google-deepmind/penzai)**: DeepMind's library for legible, introspectable, surgically-editable neural networks. Designed for interpretability work. <img src="https://img.shields.io/github/stars/google-deepmind/penzai?style=social" align="center">
 
 > 💡 **Pragmatic multi-framework options.** Teams already invested in the Keras or HuggingFace ecosystem can use **[Keras 3](https://github.com/keras-team/keras)** with its JAX backend or **[HuggingFace Transformers](https://github.com/huggingface/transformers)** Flax models — not JAX-native in design, but battle-tested bridges for real production stacks.
 
@@ -71,10 +71,10 @@ Every entry ships with a **health indicator** — 🟢 Active · 🟡 Stable · 
 * 🟢 **[Grain](https://github.com/google/grain)**: Deterministic, JAX-native high-throughput data loading — the TPU-era replacement for `tf.data`. <img src="https://img.shields.io/github/stars/google/grain?style=social" align="center">
 * 🟢 **[Chex](https://github.com/google-deepmind/chex)**: DeepMind's assertions and testing toolkit for writing JAX code you can actually trust. <img src="https://img.shields.io/github/stars/google-deepmind/chex?style=social" align="center">
 * 🟢 **[jaxtyping](https://github.com/patrick-kidger/jaxtyping)**: Shape-and-dtype-aware type hints that catch bugs *before* the first JIT compile. <img src="https://img.shields.io/github/stars/patrick-kidger/jaxtyping?style=social" align="center">
-* 🟡 **[safejax](https://github.com/alvarobartt/safejax)**: Serialize Flax / Haiku / Equinox parameters via `safetensors` — safer than pickling, portable across frameworks. <img src="https://img.shields.io/github/stars/alvarobartt/safejax?style=social" align="center">
+* 🟡 **[safejax](https://github.com/alvarobartt/safejax)**: Serializes Flax / Haiku / Equinox parameters via `safetensors`. Portable across frameworks, no executable payload. <img src="https://img.shields.io/github/stars/alvarobartt/safejax?style=social" align="center">
 * 🟢 **[jax-tqdm](https://github.com/jeremiecoullon/jax-tqdm)**: Add a real progress bar to JIT-compiled `jax.lax.scan` and training loops — one decorator, zero friction. <img src="https://img.shields.io/github/stars/jeremiecoullon/jax-tqdm?style=social" align="center">
 * 🟢 **[JAX Toolbox](https://github.com/NVIDIA/JAX-Toolbox)**: NVIDIA's nightly CI and optimized container images for running JAX workloads on H100/B200 GPUs. <img src="https://img.shields.io/github/stars/NVIDIA/JAX-Toolbox?style=social" align="center">
-* 🟢 **[mpi4jax](https://github.com/PhilipVinc/mpi4jax)**: Zero-copy MPI collectives inside JIT-compiled JAX code — the bridge for classical HPC clusters. <img src="https://img.shields.io/github/stars/PhilipVinc/mpi4jax?style=social" align="center">
+* 🟢 **[mpi4jax](https://github.com/PhilipVinc/mpi4jax)**: Zero-copy MPI collectives inside JIT-compiled JAX code. Useful on classical HPC clusters. <img src="https://img.shields.io/github/stars/PhilipVinc/mpi4jax?style=social" align="center">
 
 ---
 
@@ -84,13 +84,13 @@ Every entry ships with a **health indicator** — 🟢 Active · 🟡 Stable · 
 
 *Large-scale training stacks. Pick by workload scale and how much of the stack you want to own.*
 
-* 🟢 **[MaxText](https://github.com/AI-Hypercomputer/maxtext)**: Google's flagship pure-JAX LLM reference — scales from single-TPU to multi-pod without leaving Python. <img src="https://img.shields.io/github/stars/AI-Hypercomputer/maxtext?style=social" align="center">
-* 🟢 **[Tunix](https://github.com/google/tunix)**: Google's post-training toolkit on JAX — SFT, RLHF (PPO/GRPO/DAPO), and agentic RL with tool use, built on Flax NNX. <img src="https://img.shields.io/github/stars/google/tunix?style=social" align="center">
-* 🟢 **[Levanter](https://github.com/stanford-crfm/levanter)**: Stanford CRFM's scalable, reproducible foundation-model trainer with named tensors and bit-level determinism. <img src="https://img.shields.io/github/stars/stanford-crfm/levanter?style=social" align="center">
-* 🟢 **[EasyDeL](https://github.com/erfanzar/EasyDeL)**: Opinionated training *and* serving for Llama/Mixtral/Falcon/Qwen families in JAX — ergonomics-first. <img src="https://img.shields.io/github/stars/erfanzar/EasyDeL?style=social" align="center">
-* 🟢 **[kvax](https://github.com/nebius/kvax)**: A production-grade FlashAttention implementation for JAX with document-mask and context-parallel support. <img src="https://img.shields.io/github/stars/nebius/kvax?style=social" align="center">
-* 🟡 **[Lorax](https://github.com/davisyoshida/lorax)**: Automatic LoRA injection for any JAX model (Flax, Haiku, Equinox) — one line to fine-tune at a fraction of the memory. <img src="https://img.shields.io/github/stars/davisyoshida/lorax?style=social" align="center">
-* 🟢 **[FlaxDiff](https://github.com/AshishKumar4/FlaxDiff)**: Multi-node, multi-device diffusion model training on TPUs — the LLM world has a sibling. <img src="https://img.shields.io/github/stars/AshishKumar4/FlaxDiff?style=social" align="center">
+* 🟢 **[MaxText](https://github.com/AI-Hypercomputer/maxtext)**: Google's pure-JAX LLM training reference. Scales from a single TPU to multi-pod runs. <img src="https://img.shields.io/github/stars/AI-Hypercomputer/maxtext?style=social" align="center">
+* 🟢 **[Tunix](https://github.com/google/tunix)**: Google's post-training toolkit on JAX: SFT, RLHF (PPO/GRPO/DAPO), and tool-using agentic RL, built on Flax NNX. <img src="https://img.shields.io/github/stars/google/tunix?style=social" align="center">
+* 🟢 **[Levanter](https://github.com/stanford-crfm/levanter)**: Stanford CRFM's scalable foundation-model trainer with named tensors and bit-level determinism. <img src="https://img.shields.io/github/stars/stanford-crfm/levanter?style=social" align="center">
+* 🟢 **[EasyDeL](https://github.com/erfanzar/EasyDeL)**: Training and serving for Llama/Mixtral/Falcon/Qwen families in JAX. <img src="https://img.shields.io/github/stars/erfanzar/EasyDeL?style=social" align="center">
+* 🟢 **[kvax](https://github.com/nebius/kvax)**: FlashAttention implementation for JAX with document-mask and context-parallel support. <img src="https://img.shields.io/github/stars/nebius/kvax?style=social" align="center">
+* 🟡 **[Lorax](https://github.com/davisyoshida/lorax)**: Automatic LoRA injection for any JAX model (Flax, Haiku, Equinox); one decorator to fine-tune at reduced memory cost. <img src="https://img.shields.io/github/stars/davisyoshida/lorax?style=social" align="center">
+* 🟢 **[FlaxDiff](https://github.com/AshishKumar4/FlaxDiff)**: Multi-node, multi-device diffusion model training on TPUs. <img src="https://img.shields.io/github/stars/AshishKumar4/FlaxDiff?style=social" align="center">
 * 🟡 **[EasyLM](https://github.com/young-geng/EasyLM)**: Pre-train, fine-tune, evaluate and serve LLMs in JAX/Flax — the original reference used in several early open models; stable but slower-moving. <img src="https://img.shields.io/github/stars/young-geng/EasyLM?style=social" align="center">
 
 ---
@@ -135,7 +135,7 @@ Every entry ships with a **health indicator** — 🟢 Active · 🟡 Stable · 
 * 🟢 **[SCICO](https://github.com/lanl/scico)**: Los Alamos' scientific computational imaging — plug-and-play priors and inverse problems in JAX. <img src="https://img.shields.io/github/stars/lanl/scico?style=social" align="center">
 * 🟢 **[MBIRJAX](https://github.com/cabouman/mbirjax)**: High-performance tomographic reconstruction — CT and 3D imaging with modern regularizers. <img src="https://img.shields.io/github/stars/cabouman/mbirjax?style=social" align="center">
 * 🟢 **[DiffeRT](https://github.com/jeertmans/DiffeRT)**: Differentiable ray tracing for radio propagation — wireless-channel modelling with gradients. <img src="https://img.shields.io/github/stars/jeertmans/DiffeRT?style=social" align="center">
-* 🟢 **[tmmax](https://github.com/bahremsd/tmmax)**: Vectorized transfer-matrix method for thin-film optics — the Swiss Army knife for photonic stacks. <img src="https://img.shields.io/github/stars/bahremsd/tmmax?style=social" align="center">
+* 🟢 **[tmmax](https://github.com/bahremsd/tmmax)**: Vectorized transfer-matrix method for thin-film optics. <img src="https://img.shields.io/github/stars/bahremsd/tmmax?style=social" align="center">
 * 🟢 **[vivsim](https://github.com/haimingz/vivsim)**: Fluid-structure interaction via the Immersed-Boundary Lattice-Boltzmann method — engineering-grade FSI with autograd. <img src="https://img.shields.io/github/stars/haimingz/vivsim?style=social" align="center">
 
 ---
@@ -164,7 +164,7 @@ Every entry ships with a **health indicator** — 🟢 Active · 🟡 Stable · 
 
 ## 🤖 Reinforcement Learning & Evolution
 
-*End-to-end JIT'd training loops and hardware-accelerated environments — the JAX RL stack trains in minutes what TensorFlow took hours to simulate.*
+*End-to-end JIT-compiled training loops and accelerator-native environments. JAX's RL stack typically runs full training loops on a single GPU in minutes.*
 
 * 🟡 **[PureJaxRL](https://github.com/luchris429/purejaxrl)**: Fully vectorized, end-to-end JIT'd RL pipelines — PPO on 2048 envs without leaving JAX. Low recent commit activity, but remains the canonical reference for the JAX-native RL-loop pattern. <img src="https://img.shields.io/github/stars/luchris429/purejaxrl?style=social" align="center">
 * 🟢 **[Jumanji](https://github.com/instadeepai/jumanji)**: InstaDeep's suite of industry-driven, hardware-accelerated RL environments — from bin-packing to routing. <img src="https://img.shields.io/github/stars/instadeepai/jumanji?style=social" align="center">
@@ -304,4 +304,4 @@ Prefer to *see* the galaxy? The [**Observatory**](observatory/) is a cinematic 3
 
 ---
 
-*Maintained with ❤️ by the JAX community. 2026 Edition. Let's map the stars.* 🌌
+*Curated by the JAX community. 2026 edition.*
