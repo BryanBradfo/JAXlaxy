@@ -297,8 +297,10 @@ export default function TableController() {
         </div>
       </div>
 
-      {/* Airy scientific-paper table */}
-      <div className="overflow-x-auto">
+      {/* Airy scientific-paper table — desktop / tablet only.
+          Below md (768px) we render a card list instead because the table's
+          whiteSpace:nowrap columns force horizontal scroll on phones. */}
+      <div className="hidden md:block overflow-x-auto">
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr
@@ -376,6 +378,45 @@ export default function TableController() {
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile card list — feeds off the same `rows` useMemo as the table
+          above, so filter/sort behavior is identical. No nested <a> tags
+          (description may contain inline markdown links), so we use a single
+          repo-slug link as the primary tap target with description as
+          surrounding plain-text context. */}
+      <div className="block md:hidden">
+        {rows.length === 0 ? (
+          <div
+            style={{
+              padding: "56px 0",
+              textAlign: "center",
+              color: "rgba(255, 255, 255, 0.4)",
+              fontSize: 12,
+              fontFamily: SANS,
+            }}
+          >
+            No repositories match your filters.{" "}
+            <button
+              type="button"
+              onClick={resetFilters}
+              style={{
+                color: "rgba(255, 255, 255, 0.85)",
+                textDecoration: "underline",
+                fontFamily: SANS,
+                fontSize: 12,
+              }}
+            >
+              Reset
+            </button>
+          </div>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {rows.map((s) => (
+              <MobileCard key={`${s.user}/${s.repo}`} star={s} />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Footer hint — monochrome, subtle */}
@@ -545,6 +586,104 @@ function Row({ star }: { star: Star }) {
         {parseInlineMd(star.description)}
       </td>
     </tr>
+  );
+}
+
+function MobileCard({ star }: { star: Star }) {
+  return (
+    <div
+      style={{
+        padding: "12px 14px",
+        border: "1px solid rgba(255, 255, 255, 0.06)",
+        borderRadius: 4,
+        background: "rgba(255, 255, 255, 0.015)",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          marginBottom: 8,
+        }}
+      >
+        <span
+          aria-label={STATUS_LABEL[star.status]}
+          title={STATUS_LABEL[star.status]}
+          style={{
+            display: "inline-block",
+            width: 6,
+            height: 6,
+            borderRadius: "50%",
+            background: STATUS_COLOR[star.status],
+            boxShadow: `0 0 4px ${STATUS_COLOR[star.status]}`,
+            flexShrink: 0,
+          }}
+        />
+        <a
+          href={star.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            color: "white",
+            textDecoration: "none",
+            fontFamily: MONO,
+            fontSize: 13,
+            wordBreak: "break-word",
+            flex: 1,
+          }}
+        >
+          {star.user}/{star.repo}
+          <span
+            style={{
+              color: "rgba(255, 255, 255, 0.3)",
+              marginLeft: 4,
+              fontSize: 10,
+            }}
+          >
+            ↗
+          </span>
+        </a>
+        <span
+          style={{
+            fontFamily: MONO,
+            fontSize: 11,
+            color: "rgba(255, 255, 255, 0.85)",
+            fontVariantNumeric: "tabular-nums",
+            flexShrink: 0,
+          }}
+        >
+          {star.stars !== null ? star.stars.toLocaleString() : "—"}
+        </span>
+      </div>
+
+      {star.description && (
+        <p
+          style={{
+            margin: 0,
+            marginBottom: 6,
+            fontSize: 12,
+            lineHeight: 1.5,
+            color: "rgba(255, 255, 255, 0.65)",
+            fontFamily: SANS,
+          }}
+        >
+          {parseInlineMd(star.description)}
+        </p>
+      )}
+
+      <div
+        style={{
+          fontSize: 10,
+          color: "rgba(255, 255, 255, 0.4)",
+          letterSpacing: "0.04em",
+          textTransform: "uppercase",
+          fontFamily: SANS,
+        }}
+      >
+        {star.section}
+      </div>
+    </div>
   );
 }
 

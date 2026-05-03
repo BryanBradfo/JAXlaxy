@@ -21,8 +21,11 @@ const STATUS_PALETTE: Record<Status, { hex: string; intensity: number }> = {
   "🔴": { hex: "#ff4d4d", intensity: 0.25 },
 };
 
-function sizeFor(stars: number | null): number {
-  return Math.log((stars ?? 100) + 1) * 0.06 + 0.1;
+function sizeFor(stars: number | null, isMobile: boolean): number {
+  // Bump base coefficient on mobile so smaller-star repos remain visible
+  // and tappable at the tuned 100u camera distance.
+  const k = isMobile ? 0.08 : 0.06;
+  return Math.log((stars ?? 100) + 1) * k + 0.1;
 }
 
 /**
@@ -81,15 +84,22 @@ interface StarProps {
   isSelected: boolean;
   onSelect: (star: PositionedStar | null) => void;
   query: string;
+  isMobile?: boolean;
 }
 
-export function Star({ star, isSelected, onSelect, query }: StarProps) {
+export function Star({
+  star,
+  isSelected,
+  onSelect,
+  query,
+  isMobile = false,
+}: StarProps) {
   const groupRef = useRef<Group>(null);
   const meshRef = useRef<Mesh>(null);
   const [hovered, setHovered] = useState(false);
   const [nearEnough, setNearEnough] = useState(false);
   const palette = STATUS_PALETTE[star.status] ?? STATUS_PALETTE["🟡"];
-  const baseSize = sizeFor(star.stars);
+  const baseSize = sizeFor(star.stars, isMobile);
 
   // Pathfinder spotlight: dim stars whose text doesn't match the query.
   // Selected stars are exempt so a user's current focus never goes dark.
@@ -172,18 +182,28 @@ export function Star({ star, isSelected, onSelect, query }: StarProps) {
         </mesh>
       )}
 
-      {/* Invisible pointer target — larger pickup area for easy hover/click. */}
+      {/* Invisible pointer target — larger pickup area for easy hover/click.
+          Mobile bumps the multiplier to 3.6× for fingertip-friendly hitboxes
+          and skips hover wiring entirely (no pointerover state on touch). */}
       <mesh
-        scale={baseSize * 2.8}
-        onPointerOver={(e) => {
-          e.stopPropagation();
-          setHovered(true);
-          document.body.style.cursor = "pointer";
-        }}
-        onPointerOut={() => {
-          setHovered(false);
-          document.body.style.cursor = "";
-        }}
+        scale={baseSize * (isMobile ? 3.6 : 2.8)}
+        onPointerOver={
+          isMobile
+            ? undefined
+            : (e) => {
+                e.stopPropagation();
+                setHovered(true);
+                document.body.style.cursor = "pointer";
+              }
+        }
+        onPointerOut={
+          isMobile
+            ? undefined
+            : () => {
+                setHovered(false);
+                document.body.style.cursor = "";
+              }
+        }
         onClick={(e) => {
           e.stopPropagation();
           onSelect(star);
