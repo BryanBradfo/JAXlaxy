@@ -80,7 +80,6 @@ export default function Galaxy() {
         value={pathfinderQuery}
         onChange={setPathfinderQuery}
         isMobile={isMobile}
-        liftAboveSheet={isMobile && selectedStar !== null}
       />
       <Canvas
         camera={{

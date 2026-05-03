@@ -5,31 +5,31 @@ interface Props {
   value: string;
   onChange: (v: string) => void;
   isMobile?: boolean;
-  // Lift the input above the bottom sheet when a star is selected on mobile.
-  liftAboveSheet?: boolean;
 }
 
 /**
  * Pathfinder search input.
  *
  * - Desktop: minimalist floating overlay at top-left, borderless underline.
- * - Mobile: bottom-sticky bar (above iOS Safari URL bar). When a star is
- *   selected, the input lifts to sit above the bottom sheet so it remains
- *   reachable. Selection is reactive (no submit button) — Enter just blurs
- *   the input to dismiss the keyboard.
+ * - Mobile: full-width bar pinned just below the NavHeader. The bottom
+ *   sheet (StarCard mobile) lives at the opposite end of the viewport, so
+ *   the two surfaces never collide and the search bar never has to jump.
+ *   Selection is reactive (no submit button) — Enter just blurs the input
+ *   to dismiss the keyboard.
  */
 export function PathfinderInput({
   value,
   onChange,
   isMobile = false,
-  liftAboveSheet = false,
 }: Props) {
   const [focused, setFocused] = useState(false);
 
   const wrapperStyle: CSSProperties = isMobile
     ? {
         position: "fixed",
-        bottom: liftAboveSheet ? "calc(70vh + 16px)" : 16,
+        // NavHeader is h-14 (56px). Sit 4px below so it doesn't kiss the
+        // header line, with horizontal margins for breathing room.
+        top: 60,
         left: 12,
         right: 12,
         width: "auto",
@@ -42,7 +42,6 @@ export function PathfinderInput({
         border: "1px solid rgba(255, 255, 255, 0.08)",
         borderRadius: 8,
         padding: "8px 12px",
-        transition: "bottom 240ms ease",
       }
     : {
         position: "fixed",

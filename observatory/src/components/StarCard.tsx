@@ -45,15 +45,16 @@ const CARD_STYLE: CSSProperties = {
 };
 
 // Bottom-sheet variant for mobile: full-width, pinned to bottom edge,
-// rounded only on top corners (sharp on the screen edge), max 70vh tall
-// with the inner content div scrolling if it overflows.
+// rounded only on top corners (sharp on the screen edge). Capped at 55vh
+// so the close button at top-right stays within easy thumb reach instead
+// of sitting halfway up the screen on tall phones.
 const SHEET_STYLE: CSSProperties = {
   position: "fixed",
   bottom: 0,
   left: 0,
   right: 0,
   width: "auto",
-  maxHeight: "70vh",
+  maxHeight: "55vh",
   background: "rgba(5, 8, 15, 0.94)",
   backdropFilter: "blur(24px) saturate(160%)",
   WebkitBackdropFilter: "blur(24px) saturate(160%)",
@@ -142,8 +143,23 @@ export function StarCard({ star, onClose, isMobile = false }: Props) {
       : {}),
   };
 
+  // Mobile close button is 38×38 (above iOS HIG 44pt with the 1px border
+  // counted as visual edge) instead of 22×22 — finger-friendly target. We
+  // also lift the default visibility (hover doesn't apply on touch).
   const closeStyle: CSSProperties = {
     ...CLOSE_BUTTON_STYLE,
+    ...(isMobile
+      ? {
+          width: 38,
+          height: 38,
+          top: 8,
+          right: 8,
+          fontSize: 20,
+          background: "rgba(255, 255, 255, 0.08)",
+          borderColor: "rgba(255, 255, 255, 0.18)",
+          color: "rgba(255, 255, 255, 0.9)",
+        }
+      : {}),
     ...(closeHover
       ? {
           background: "rgba(255, 255, 255, 0.04)",
@@ -152,6 +168,10 @@ export function StarCard({ star, onClose, isMobile = false }: Props) {
         }
       : {}),
   };
+
+  // Reserve enough horizontal padding on eyebrow + title so the larger
+  // mobile close button doesn't overlap the text.
+  const headerPadRight = isMobile ? 54 : 32;
 
   // Inner body padding stays the same; on mobile we add overflow-y so long
   // descriptions / dense property lists scroll inside the sheet rather than
@@ -162,8 +182,8 @@ export function StarCard({ star, onClose, isMobile = false }: Props) {
     ? {
         padding: "8px 18px 20px",
         overflowY: "auto",
-        // 70vh sheet minus drag-rail row (~18px) and a small bottom buffer.
-        maxHeight: "calc(70vh - 24px)",
+        // 55vh sheet minus drag-rail row (~18px) and a small bottom buffer.
+        maxHeight: "calc(55vh - 24px)",
         WebkitOverflowScrolling: "touch",
       }
     : { padding: "16px 18px" };
@@ -208,7 +228,7 @@ export function StarCard({ star, onClose, isMobile = false }: Props) {
               letterSpacing: "0.12em",
               textTransform: "uppercase",
               fontFamily: SANS,
-              paddingRight: 32,
+              paddingRight: headerPadRight,
             }}
           >
             {displayed.section}
@@ -221,7 +241,7 @@ export function StarCard({ star, onClose, isMobile = false }: Props) {
               alignItems: "center",
               gap: 8,
               marginBottom: 12,
-              paddingRight: 32,
+              paddingRight: headerPadRight,
             }}
           >
             <span
