@@ -26,8 +26,13 @@ import * as THREE from "three";
 // Route through Astro's BASE_URL so the asset resolves correctly in dev
 // (base=/) and in production under the sub-path (base=/JAXlaxy/).
 const LOGO_PATH = `${import.meta.env.BASE_URL}core-logo.png`;
+// Desktop scales — kept as the canonical "size of the core" reference.
 const LOGO_SCALE = 4.5; // world units — sharp, dense core (not a giant sun)
 const AURA_SCALE = 8.5; // aura ~1.89× logo for soft halo (proportional to new logo size)
+// Mobile scales — pulled in to fit the narrower portrait viewport without
+// crowding the surrounding star clusters.
+const LOGO_SCALE_MOBILE = 3.5;
+const AURA_SCALE_MOBILE = 7.0;
 
 // ─── aura texture ─────────────────────────────────────────────────────────
 
@@ -111,7 +116,11 @@ function useLogoTexture(): THREE.Texture | null {
 
 // ─── component ────────────────────────────────────────────────────────────
 
-export function GalacticNucleus() {
+interface NucleusProps {
+  isMobile?: boolean;
+}
+
+export function GalacticNucleus({ isMobile = false }: NucleusProps) {
   const auraTex = useAuraTexture();
   const logoTex = useLogoTexture();
 
@@ -120,6 +129,9 @@ export function GalacticNucleus() {
   const auraRef = useRef<THREE.Sprite>(null);
   const auraMatRef = useRef<THREE.SpriteMaterial>(null);
 
+  const logoBase = isMobile ? LOGO_SCALE_MOBILE : LOGO_SCALE;
+  const auraBase = isMobile ? AURA_SCALE_MOBILE : AURA_SCALE;
+
   useFrame((state) => {
     const phase = state.clock.elapsedTime * ((2 * Math.PI) / 3); // 3s period
 
@@ -127,14 +139,14 @@ export function GalacticNucleus() {
     const logoOpacity = 0.9 + Math.sin(phase) * 0.1; // 0.8 – 1.0
     const logoScale = 1 + Math.sin(phase) * 0.04; // 0.96 – 1.04
     if (logoMatRef.current) logoMatRef.current.opacity = logoOpacity;
-    if (logoRef.current) logoRef.current.scale.setScalar(LOGO_SCALE * logoScale);
+    if (logoRef.current) logoRef.current.scale.setScalar(logoBase * logoScale);
 
     // Aura breath — phased 45° behind so the halo feels independent of the
     // core, like a glow that expands after the logo brightens.
     const auraOpacity = 0.55 + Math.sin(phase - Math.PI / 4) * 0.25; // 0.30 – 0.80
     const auraScale = 1 + Math.sin(phase - Math.PI / 4) * 0.07; // 0.93 – 1.07
     if (auraMatRef.current) auraMatRef.current.opacity = auraOpacity;
-    if (auraRef.current) auraRef.current.scale.setScalar(AURA_SCALE * auraScale);
+    if (auraRef.current) auraRef.current.scale.setScalar(auraBase * auraScale);
   });
 
   if (!auraTex || !logoTex) return null;
@@ -148,7 +160,7 @@ export function GalacticNucleus() {
 
       {/* Aura — additive blending so it only adds brightness to the scene,
           matching the holographic "light projection" read. */}
-      <sprite ref={auraRef} scale={AURA_SCALE} renderOrder={1}>
+      <sprite ref={auraRef} scale={auraBase} renderOrder={1}>
         <spriteMaterial
           ref={auraMatRef}
           map={auraTex}
@@ -161,7 +173,7 @@ export function GalacticNucleus() {
 
       {/* Logo — normal blending preserves the PNG's original colors exactly.
           depthWrite:false keeps it holographic (doesn't occlude what's behind). */}
-      <sprite ref={logoRef} scale={LOGO_SCALE} renderOrder={2}>
+      <sprite ref={logoRef} scale={logoBase} renderOrder={2}>
         <spriteMaterial
           ref={logoMatRef}
           map={logoTex}

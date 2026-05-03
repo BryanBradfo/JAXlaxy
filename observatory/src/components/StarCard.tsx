@@ -7,6 +7,7 @@ import { parseInlineMd } from "../lib/inlineMarkdown";
 interface Props {
   star: PositionedStar | null;
   onClose: () => void;
+  isMobile?: boolean;
 }
 
 const MONO = '"JetBrains Mono", ui-monospace, "SF Mono", monospace';
@@ -38,6 +39,29 @@ const CARD_STYLE: CSSProperties = {
   boxShadow:
     "0 20px 48px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.02) inset",
   transition: "opacity 240ms ease, transform 240ms ease",
+  zIndex: 50,
+  color: "white",
+  fontFamily: SANS,
+};
+
+// Bottom-sheet variant for mobile: full-width, pinned to bottom edge,
+// rounded only on top corners (sharp on the screen edge), max 70vh tall
+// with the inner content div scrolling if it overflows.
+const SHEET_STYLE: CSSProperties = {
+  position: "fixed",
+  bottom: 0,
+  left: 0,
+  right: 0,
+  width: "auto",
+  maxHeight: "70vh",
+  background: "rgba(5, 8, 15, 0.94)",
+  backdropFilter: "blur(24px) saturate(160%)",
+  WebkitBackdropFilter: "blur(24px) saturate(160%)",
+  border: "1px solid rgba(255, 255, 255, 0.09)",
+  borderBottom: "none",
+  borderRadius: "12px 12px 0 0",
+  boxShadow: "0 -16px 48px rgba(0, 0, 0, 0.6)",
+  transition: "opacity 240ms ease, transform 280ms ease",
   zIndex: 50,
   color: "white",
   fontFamily: SANS,
@@ -79,7 +103,7 @@ const LAUNCH_LINK_STYLE: CSSProperties = {
   transition: "color 120ms ease, border-color 120ms ease",
 };
 
-export function StarCard({ star, onClose }: Props) {
+export function StarCard({ star, onClose, isMobile = false }: Props) {
   const [displayed, setDisplayed] = useState<PositionedStar | null>(star);
   const [launchHover, setLaunchHover] = useState(false);
   const [closeHover, setCloseHover] = useState(false);
@@ -98,10 +122,13 @@ export function StarCard({ star, onClose }: Props) {
     onClose();
   };
 
+  // Mobile sheet slides up from below the viewport; desktop card lifts a
+  // few pixels into place. Both fade in via opacity over the same window.
+  const hiddenTransform = isMobile ? "translateY(100%)" : "translateY(8px)";
   const containerStyle: CSSProperties = {
-    ...CARD_STYLE,
+    ...(isMobile ? SHEET_STYLE : CARD_STYLE),
     opacity: star ? 1 : 0,
-    transform: star ? "translateY(0)" : "translateY(8px)",
+    transform: star ? "translateY(0)" : hiddenTransform,
     pointerEvents: star ? "auto" : "none",
   };
 
@@ -126,10 +153,39 @@ export function StarCard({ star, onClose }: Props) {
       : {}),
   };
 
+  // Inner body padding stays the same; on mobile we add overflow-y so long
+  // descriptions / dense property lists scroll inside the sheet rather than
+  // pushing it past the 70vh max. The close button is hoisted to be a sibling
+  // of this body — its position:absolute anchors to the fixed outer
+  // container, so it stays put while the body scrolls.
+  const bodyStyle: CSSProperties = isMobile
+    ? {
+        padding: "8px 18px 20px",
+        overflowY: "auto",
+        // 70vh sheet minus drag-rail row (~18px) and a small bottom buffer.
+        maxHeight: "calc(70vh - 24px)",
+        WebkitOverflowScrolling: "touch",
+      }
+    : { padding: "16px 18px" };
+
   return (
     <div style={containerStyle} role="dialog" aria-hidden={!star}>
       {displayed && (
-        <div style={{ padding: "16px 18px" }}>
+        <>
+          {isMobile && (
+            // Drag-rail affordance — visual cue that this is a sheet. No
+            // actual gesture handling for v1; tap-X or tap-galaxy-void closes.
+            <div
+              aria-hidden="true"
+              style={{
+                width: 36,
+                height: 4,
+                margin: "8px auto 6px",
+                borderRadius: 2,
+                background: "rgba(255, 255, 255, 0.18)",
+              }}
+            />
+          )}
           <button
             type="button"
             aria-label="Close"
@@ -140,6 +196,8 @@ export function StarCard({ star, onClose }: Props) {
           >
             ×
           </button>
+
+          <div style={bodyStyle}>
 
           {/* Eyebrow: section label */}
           <div
@@ -259,7 +317,8 @@ export function StarCard({ star, onClose }: Props) {
           >
             Launch Repository <span aria-hidden="true">↗</span>
           </a>
-        </div>
+          </div>
+        </>
       )}
     </div>
   );

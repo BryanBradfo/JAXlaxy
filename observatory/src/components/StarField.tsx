@@ -124,6 +124,7 @@ interface StarFieldProps {
   selectedStar: PositionedStar | null;
   onSelect: (star: PositionedStar | null) => void;
   query: string;
+  isMobile?: boolean;
 }
 
 export function StarField({
@@ -131,6 +132,7 @@ export function StarField({
   selectedStar,
   onSelect,
   query,
+  isMobile = false,
 }: StarFieldProps) {
   const positioned = useMemo<PositionedStar[]>(() => {
     // Collect unique sections in order of first appearance (stable mapping).
@@ -197,13 +199,16 @@ export function StarField({
 
   return (
     <>
-      {centroids.map((c) => (
-        <ConstellationLabel
-          key={c.section}
-          section={c.section}
-          position={c.position}
-        />
-      ))}
+      {/* Constellation labels overlap badly in portrait viewports — the
+          Pathfinder + section pills already convey grouping on mobile. */}
+      {!isMobile &&
+        centroids.map((c) => (
+          <ConstellationLabel
+            key={c.section}
+            section={c.section}
+            position={c.position}
+          />
+        ))}
       {positioned.map((s) => {
         const key = `${s.user}/${s.repo}`;
         return (
@@ -213,6 +218,7 @@ export function StarField({
             isSelected={selectedKey === key}
             onSelect={onSelect}
             query={query}
+            isMobile={isMobile}
           />
         );
       })}

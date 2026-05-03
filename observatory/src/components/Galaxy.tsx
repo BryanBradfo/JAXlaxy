@@ -60,29 +60,6 @@ export default function Galaxy() {
       .catch((e) => setError(String(e)));
   }, []);
 
-  if (isMobile) {
-    return (
-      <div className="h-screen flex items-center justify-center px-6 text-center">
-        <div className="max-w-sm">
-          <h2
-            className="text-xl mb-3"
-            style={{ color: "var(--color-cyan-neon)" }}
-          >
-            Observatory is desktop-first
-          </h2>
-          <p className="text-white/60 text-sm leading-relaxed">
-            The interactive 3D galaxy is optimized for a larger screen. The
-            mobile experience is under construction — for now, the{" "}
-            <a href={`${import.meta.env.BASE_URL}table`} className="underline">
-              Data Table
-            </a>{" "}
-            gives you the full list.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   if (error) {
     return (
       <div className="h-screen flex items-center justify-center px-6 text-center">
@@ -99,10 +76,22 @@ export default function Galaxy() {
 
   return (
     <>
-      <PathfinderInput value={pathfinderQuery} onChange={setPathfinderQuery} />
+      <PathfinderInput
+        value={pathfinderQuery}
+        onChange={setPathfinderQuery}
+        isMobile={isMobile}
+        liftAboveSheet={isMobile && selectedStar !== null}
+      />
       <Canvas
-        camera={{ position: [0, 0, 85], fov: 55 }}
-        gl={{ antialias: true }}
+        camera={{
+          position: isMobile ? [0, 0, 100] : [0, 0, 85],
+          fov: isMobile ? 65 : 55,
+        }}
+        // Clamp DPR on mobile — phones report devicePixelRatio up to 3, but
+        // the perceptual gain on a galaxy of glowing dots is ~zero, while
+        // pixel cost is quadratic. 1.5 cap keeps mid-tier phones at 30+ fps.
+        dpr={isMobile ? [1, 1.5] : undefined}
+        gl={{ antialias: !isMobile }}
         // R3F fires onPointerMissed when a click hits no 3D object.
         // Dragging is handled upstream by OrbitControls, so this cleanly
         // captures "click the void" to deselect.
@@ -113,7 +102,7 @@ export default function Galaxy() {
         <Stars
           radius={280}
           depth={70}
-          count={5000}
+          count={isMobile ? 1500 : 5000}
           factor={5}
           saturation={0}
           fade
@@ -126,7 +115,7 @@ export default function Galaxy() {
         {/* Holographic nucleus anchored at origin — the XLA/JAX core the
             galaxy revolves around. Its point light catches the rim of nearby
             stars, selling "the nucleus illuminates the constellations." */}
-        <GalacticNucleus />
+        <GalacticNucleus isMobile={isMobile} />
         <AutoRotator paused={selectedStar !== null}>
           {data ? (
             <StarField
@@ -134,31 +123,44 @@ export default function Galaxy() {
               selectedStar={selectedStar}
               onSelect={setSelectedStar}
               query={pathfinderQuery}
+              isMobile={isMobile}
             />
           ) : null}
         </AutoRotator>
 
-        <EffectComposer>
-          <Bloom
-            intensity={0.6}
-            luminanceThreshold={0.5}
-            luminanceSmoothing={0.7}
-            radius={0.4}
-          />
-        </EffectComposer>
+        {/* Bloom is the most expensive shader in the scene — disabled on
+            mobile to prevent thermal throttling on mid-tier phones. */}
+        {!isMobile && (
+          <EffectComposer>
+            <Bloom
+              intensity={0.6}
+              luminanceThreshold={0.5}
+              luminanceSmoothing={0.7}
+              radius={0.4}
+            />
+          </EffectComposer>
+        )}
 
         <OrbitControls
           makeDefault
           enableDamping
           dampingFactor={0.05}
           enablePan={false}
+          // Pinch-zoom conflicts with browser zoom on touch; lock to the
+          // tuned mobile camera distance instead.
+          enableZoom={!isMobile}
+          rotateSpeed={isMobile ? 0.45 : 1}
           minDistance={20}
           maxDistance={250}
         />
       </Canvas>
 
       {/* Sibling DOM overlay — fixed-position, independent of Canvas layout. */}
-      <StarCard star={selectedStar} onClose={() => setSelectedStar(null)} />
+      <StarCard
+        star={selectedStar}
+        onClose={() => setSelectedStar(null)}
+        isMobile={isMobile}
+      />
     </>
   );
 }
