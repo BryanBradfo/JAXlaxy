@@ -92,6 +92,11 @@ export default function Galaxy() {
         // pixel cost is quadratic. 1.5 cap keeps mid-tier phones at 30+ fps.
         dpr={isMobile ? [1, 1.5] : undefined}
         gl={{ antialias: !isMobile }}
+        // touch-action:none tells the browser to forward all touch gestures
+        // to our handlers instead of interpreting them as page scroll/zoom.
+        // Required for OrbitControls' two-finger pinch-to-zoom to work on
+        // mobile without fighting Safari/Chrome's native page pinch.
+        style={{ touchAction: "none" }}
         // R3F fires onPointerMissed when a click hits no 3D object.
         // Dragging is handled upstream by OrbitControls, so this cleanly
         // captures "click the void" to deselect.
@@ -146,9 +151,13 @@ export default function Galaxy() {
           enableDamping
           dampingFactor={0.05}
           enablePan={false}
-          // Pinch-zoom conflicts with browser zoom on touch; lock to the
-          // tuned mobile camera distance instead.
-          enableZoom={!isMobile}
+          // Pinch-to-zoom: drei's OrbitControls maps two-finger pinch to
+          // dolly. The Canvas's touch-action:none above prevents the
+          // browser from intercepting the gesture as page zoom.
+          enableZoom
+          // Gentler zoomSpeed on mobile — finger-distance deltas are small
+          // in absolute pixels, so default 1.0 produces lurchy dollying.
+          zoomSpeed={isMobile ? 0.6 : 1}
           rotateSpeed={isMobile ? 0.45 : 1}
           minDistance={20}
           maxDistance={250}
