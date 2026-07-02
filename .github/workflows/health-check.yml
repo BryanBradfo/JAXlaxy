@@ -33,11 +33,15 @@ jobs:
         run: |
           # Exit 1 means "flags detected" — our alert signal, not a job failure.
           # --json refreshes the Observatory's data so the deployed site stays
-          # in sync with the latest audit.
+          # in sync with the latest audit. --apply rewrites mechanical status
+          # downgrades (🟢→🟡→🔴) into README.md; errored/rate-limited repos are
+          # skipped and promotions are never auto-applied, so remaining flags
+          # (broken links, moved repos) still exit non-zero and open an issue.
           set +e
           python scripts/health_check.py \
             --output health_report.md \
-            --json observatory/public/galaxy.json
+            --json observatory/public/galaxy.json \
+            --apply
           echo "exit_code=$?" >> "$GITHUB_OUTPUT"
           set -e
 
@@ -49,20 +53,22 @@ jobs:
           path: health_report.md
           retention-days: 30
 
-      - name: Commit refreshed galaxy.json
+      - name: Commit refreshed data
         # Runs even when flags exist — fresh data should ship regardless of
         # whether the audit is opening an alert. Skips cleanly when schema
-        # broke and no file was written, and when the file is byte-identical.
+        # broke and no file was written, and when nothing changed. --apply may
+        # also rewrite README.md badges, so stage both and commit whichever moved
+        # — otherwise the rewrite is lost and re-applied every week.
         if: hashFiles('observatory/public/galaxy.json') != ''
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if [ -n "$(git status --porcelain observatory/public/galaxy.json)" ]; then
-            git add observatory/public/galaxy.json
-            git commit -m "chore: weekly galaxy.json refresh"
+          if [ -n "$(git status --porcelain observatory/public/galaxy.json README.md)" ]; then
+            git add observatory/public/galaxy.json README.md
+            git commit -m "chore: weekly health refresh (galaxy.json + status downgrades)"
             git push
           else
-            echo "galaxy.json byte-identical — no commit needed."
+            echo "No changes — galaxy.json + README byte-identical."
           fi
 
       - name: Open alert issue on flags
