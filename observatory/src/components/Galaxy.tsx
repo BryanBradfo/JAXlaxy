@@ -10,6 +10,25 @@ import { GalacticNucleus } from "./GalacticNucleus";
 import { StarCard } from "./StarCard";
 import { PathfinderInput } from "./PathfinderInput";
 
+const MONTHS = [
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+];
+
+/**
+ * Format galaxy.json's `generated_at` (e.g. "2026-04-28T20:45+00:00") as a
+ * short human date like "28 Apr 2026". We slice the date part with a regex
+ * rather than `new Date(...)` so the displayed day never drifts across a
+ * timezone boundary — the audit stamps UTC and we want to show that same day.
+ */
+function formatUpdated(iso: string): string | null {
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
+  if (!m) return null;
+  const [, year, month, day] = m;
+  const label = MONTHS[Number(month) - 1];
+  return label ? `${Number(day)} ${label} ${year}` : null;
+}
+
 function useMediaQuery(query: string): boolean {
   const [matches, setMatches] = useState(false);
   useEffect(() => {
@@ -169,6 +188,18 @@ export default function Galaxy() {
         onClose={() => setSelectedStar(null)}
         isMobile={isMobile}
       />
+
+      {/* Freshness stamp — mirrors the "Generated" column on the Data Table.
+          Bottom-right so it never collides with the bottom-left caption.
+          Only renders once data loads, matching the runtime-fetch pattern. */}
+      {data && formatUpdated(data.generated_at) && (
+        <div
+          className="absolute bottom-6 right-6 text-xs text-white/40 z-10 pointer-events-none tracking-[0.005em]"
+          style={{ fontFamily: "var(--font-sans)" }}
+        >
+          Data updated {formatUpdated(data.generated_at)}
+        </div>
+      )}
     </>
   );
 }
