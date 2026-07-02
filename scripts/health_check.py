@@ -147,6 +147,67 @@ def flag_for(entry: Entry, state: RepoState, sug: str) -> str:
     return ""
 
 
+def downgrade_target(entry: Entry, state: RepoState, sug: str) -> str | None:
+    """Emoji README should be rewritten to for a *downgrade*, or None.
+
+    Mirrors the downgrade half of flag_for(): archived → 🔴, and any suggestion
+    that ranks strictly below the current badge. Never returns an upgrade —
+    promotions stay a manual call (a library may be intentionally frozen, or
+    declare an EOL the push date can't see). Rate-limited / errored repos
+    return None, so `--apply` on an anonymous run can't mass-downgrade.
+    """
+    if state.error:
+        return None
+    if state.archived and entry.current != LEGACY:
+        return LEGACY
+    if sug == "?":
+        return None
+    if STATUS_RANK.get(sug, 0) < STATUS_RANK.get(entry.current, 0):
+        return sug
+    return None
+
+
+def rewrite_status_line(line: str, new_status: str) -> str:
+    """Replace the first status emoji on a README entry line with new_status.
+
+    Entry lines carry exactly one status emoji (the README schema), so the
+    first STATUS_RE match is the badge; the shields.io stars badge and the
+    description are left byte-for-byte intact.
+    """
+    return STATUS_RE.sub(new_status, line, count=1)
+
+
+def apply_downgrades(
+    readme_path: Path,
+    entries: list[Entry],
+    states: dict[tuple[str, str], RepoState],
+    now: dt.datetime,
+) -> list[tuple[Entry, str, str]]:
+    """Rewrite flagged downgrades into README.md in place.
+
+    Mutates each changed Entry's `current` so a galaxy.json rendered later in
+    the same run reflects the new badge (status is copied from e.current).
+    Returns (entry, old, new) tuples for the caller to summarize. Preserves the
+    file's trailing newline.
+    """
+    text = readme_path.read_text(encoding="utf-8")
+    had_trailing_newline = text.endswith("\n")
+    lines = text.splitlines()
+    changes: list[tuple[Entry, str, str]] = []
+    for e in entries:
+        state = states[(e.user, e.repo)]
+        target = downgrade_target(e, state, suggest(state, now))
+        if target is None or target == e.current:
+            continue
+        lines[e.line_no - 1] = rewrite_status_line(lines[e.line_no - 1], target)
+        changes.append((e, e.current, target))
+        e.current = target
+    if changes:
+        out = "\n".join(lines) + ("\n" if had_trailing_newline else "")
+        readme_path.write_text(out, encoding="utf-8")
+    return changes
+
+
 def render_galaxy_json(entries: list[Entry], states: dict[tuple[str, str], RepoState]) -> str:
     """Serialize the audit into the shape the Observatory site consumes.
 
@@ -220,6 +281,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output", type=Path, help="Write the Markdown report to this path")
     parser.add_argument("--json", dest="json_path", type=Path, help="Write the Observatory galaxy JSON to this path")
     parser.add_argument("--delay", type=float, default=0.3, help="Seconds between API requests")
+    parser.add_argument(
+        "--apply",
+        action="store_true",
+        help="Rewrite flagged downgrades (🟢→🟡→🔴) into README.md in place; never promotes",
+    )
     args = parser.parse_args(argv)
 
     if not args.readme.exists():
@@ -242,6 +308,18 @@ def main(argv: list[str] | None = None) -> int:
         states[(user, repo)] = fetch_repo(user, repo, token)
         if i < len(unique):
             time.sleep(args.delay)
+
+    # Apply BEFORE rendering so both the report and galaxy.json reflect the
+    # rewritten badges (status is copied from each Entry's current emoji).
+    if args.apply:
+        now = dt.datetime.now(dt.timezone.utc)
+        changes = apply_downgrades(args.readme, entries, states, now)
+        if changes:
+            print(f"\nApplied {len(changes)} downgrade(s) to {args.readme}:", file=sys.stderr)
+            for e, old, new in changes:
+                print(f"  {old} → {new}  {e.user}/{e.repo}", file=sys.stderr)
+        else:
+            print("\nNo downgrades to apply — README already matches GitHub state.", file=sys.stderr)
 
     report, flagged = render_report(entries, states)
     print(report)
