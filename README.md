@@ -121,7 +121,7 @@ Every entry has a **health indicator** — 🟢 Active · 🟡 Stable · 🔴 Le
 * 🟢 **[FDTDX](https://github.com/ymahlau/fdtdx)**: Finite-Difference Time-Domain electromagnetic simulation in JAX — design photonic devices with autograd. <img src="https://img.shields.io/github/stars/ymahlau/fdtdx?style=social" align="center">
 * 🟢 **[JaxDF](https://github.com/ucl-bug/jaxdf)**: Write differentiable PDE simulators with arbitrary discretizations — the building block for inverse-problem science. <img src="https://img.shields.io/github/stars/ucl-bug/jaxdf?style=social" align="center">
 * 🟢 **[JAX-in-Cell](https://github.com/uwplasma/JAX-in-Cell)**: Self-consistent particle-in-cell plasma simulations — classical HPC physics meets JAX autodiff. <img src="https://img.shields.io/github/stars/uwplasma/JAX-in-Cell?style=social" align="center">
-* 🟢 **[foragax](https://github.com/i-m-iron-man/Foragax)**: Agent-based modelling framework in JAX — fast, vectorized, auto-differentiable social and ecological sims. <img src="https://img.shields.io/github/stars/i-m-iron-man/Foragax?style=social" align="center">
+* 🟡 **[foragax](https://github.com/i-m-iron-man/Foragax)**: Agent-based modelling framework in JAX — fast, vectorized, auto-differentiable social and ecological sims. <img src="https://img.shields.io/github/stars/i-m-iron-man/Foragax?style=social" align="center">
 
 ### 🔭 Cosmology & Astrophysics
 
