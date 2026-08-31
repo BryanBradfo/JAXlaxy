@@ -54,7 +54,7 @@ Every entry has a **health indicator** — 🟢 Active · 🟡 Stable · 🔴 Le
 
 * 🟢 **[Flax (NNX)](https://github.com/google/flax)**: The neural network library Google and DeepMind use internally. NNX adds object-oriented state management on top of JAX's functional core. <img src="https://img.shields.io/github/stars/google/flax?style=social" align="center">
 * 🟢 **[Equinox](https://github.com/patrick-kidger/equinox)**: Everything is a PyTree. Minimal abstractions; common in scientific ML and among PyTorch users moving to JAX. <img src="https://img.shields.io/github/stars/patrick-kidger/equinox?style=social" align="center">
-* 🟢 **[Penzai](https://github.com/google-deepmind/penzai)**: DeepMind's library for legible, introspectable, surgically-editable neural networks. Designed for interpretability work. <img src="https://img.shields.io/github/stars/google-deepmind/penzai?style=social" align="center">
+* 🔴 **[Penzai](https://github.com/google-deepmind/penzai)**: DeepMind's library for legible, introspectable, surgically-editable neural networks. Designed for interpretability work. <img src="https://img.shields.io/github/stars/google-deepmind/penzai?style=social" align="center">
 
 > 💡 **Pragmatic multi-framework options.** Teams already invested in the Keras or HuggingFace ecosystem can use **[Keras 3](https://github.com/keras-team/keras)** with its JAX backend or **[HuggingFace Transformers](https://github.com/huggingface/transformers)** Flax models — not JAX-native in design, but battle-tested bridges for real production stacks.
 
