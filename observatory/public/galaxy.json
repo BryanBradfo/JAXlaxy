@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-02T05:20+00:00",
+  "generated_at": "2026-11-09T05:36+00:00",
   "total": 75,
   "thresholds": {
     "stale_months": 18,
@@ -14,7 +14,7 @@
       "description": "Autograd and XLA-powered numerical computing. Almost everything below depends on it.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 36564,
+      "stars": 36585,
       "last_push_months_ago": 0.0,
       "archived": false,
       "flag": ""
@@ -27,7 +27,7 @@
       "description": "The open-source compiler that turns JAX programs into accelerator code.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 4644,
+      "stars": 4659,
       "last_push_months_ago": 0.0,
       "archived": false,
       "flag": ""
@@ -40,8 +40,8 @@
       "description": "Runs PyTorch model code directly on JAX. Useful when migrating PyTorch codebases incrementally.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 249,
-      "last_push_months_ago": 0.3,
+      "stars": 251,
+      "last_push_months_ago": 0.6,
       "archived": false,
       "flag": ""
     },
@@ -53,8 +53,8 @@
       "description": "The neural network library Google and DeepMind use internally. NNX adds object-oriented state management on top of JAX's functional core.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 7363,
-      "last_push_months_ago": 0.2,
+      "stars": 7367,
+      "last_push_months_ago": 0.1,
       "archived": false,
       "flag": ""
     },
@@ -66,8 +66,8 @@
       "description": "Everything is a PyTree. Minimal abstractions; common in scientific ML and among PyTorch users moving to JAX.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 2997,
-      "last_push_months_ago": 0.2,
+      "stars": 2999,
+      "last_push_months_ago": 0.5,
       "archived": false,
       "flag": ""
     },
@@ -80,7 +80,7 @@
       "status": "🔴",
       "suggested": "🔴",
       "stars": 1899,
-      "last_push_months_ago": 16.3,
+      "last_push_months_ago": 16.6,
       "archived": true,
       "flag": ""
     },
@@ -92,8 +92,8 @@
       "description": "The undisputed king of gradient processing — composable optimizer transforms used in every serious JAX training loop.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 2360,
-      "last_push_months_ago": 0.1,
+      "stars": 2366,
+      "last_push_months_ago": 0.2,
       "archived": false,
       "flag": ""
     },
@@ -105,8 +105,8 @@
       "description": "The 2026 standard for multi-host checkpointing, model exporting, and resumable training at scale.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 540,
-      "last_push_months_ago": 0.1,
+      "stars": 541,
+      "last_push_months_ago": 0.0,
       "archived": false,
       "flag": ""
     },
@@ -118,8 +118,8 @@
       "description": "Deterministic, JAX-native high-throughput data loading — the TPU-era replacement for `tf.data`.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 800,
-      "last_push_months_ago": 0.1,
+      "stars": 803,
+      "last_push_months_ago": 0.0,
       "archived": false,
       "flag": ""
     },
@@ -132,7 +132,7 @@
       "status": "🟢",
       "suggested": "🟢",
       "stars": 958,
-      "last_push_months_ago": 0.8,
+      "last_push_months_ago": 1.1,
       "archived": false,
       "flag": ""
     },
@@ -144,8 +144,8 @@
       "description": "Shape-and-dtype-aware type hints that catch bugs *before* the first JIT compile.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 1880,
-      "last_push_months_ago": 0.2,
+      "stars": 1881,
+      "last_push_months_ago": 0.5,
       "archived": false,
       "flag": ""
     },
@@ -158,7 +158,7 @@
       "status": "🟡",
       "suggested": "🟡",
       "stars": 47,
-      "last_push_months_ago": 29.0,
+      "last_push_months_ago": 29.3,
       "archived": false,
       "flag": ""
     },
@@ -171,7 +171,7 @@
       "status": "🟢",
       "suggested": "🟢",
       "stars": 131,
-      "last_push_months_ago": 0.1,
+      "last_push_months_ago": 0.3,
       "archived": false,
       "flag": ""
     },
@@ -183,7 +183,7 @@
       "description": "NVIDIA's nightly CI and optimized container images for running JAX workloads on H100/B200 GPUs.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 434,
+      "stars": 437,
       "last_push_months_ago": 0.0,
       "archived": false,
       "flag": ""
@@ -196,8 +196,8 @@
       "description": "Zero-copy MPI collectives inside JIT-compiled JAX code. Useful on classical HPC clusters.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 550,
-      "last_push_months_ago": 0.2,
+      "stars": 552,
+      "last_push_months_ago": 0.4,
       "archived": false,
       "flag": ""
     },
@@ -209,7 +209,7 @@
       "description": "Google's pure-JAX LLM training reference. Scales from a single TPU to multi-pod runs.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 2455,
+      "stars": 2458,
       "last_push_months_ago": 0.0,
       "archived": false,
       "flag": ""
@@ -222,7 +222,7 @@
       "description": "Google's post-training toolkit on JAX: SFT, RLHF (PPO/GRPO/DAPO), and tool-using agentic RL, built on Flax NNX.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 2500,
+      "stars": 2504,
       "last_push_months_ago": 0.0,
       "archived": false,
       "flag": ""
@@ -235,8 +235,8 @@
       "description": "Stanford CRFM's scalable foundation-model trainer with named tensors and bit-level determinism.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 719,
-      "last_push_months_ago": 9.2,
+      "stars": 722,
+      "last_push_months_ago": 9.4,
       "archived": false,
       "flag": ""
     },
@@ -248,7 +248,7 @@
       "description": "Training and serving for Llama/Mixtral/Falcon/Qwen families in JAX.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 377,
+      "stars": 378,
       "last_push_months_ago": 0.0,
       "archived": false,
       "flag": ""
@@ -262,7 +262,7 @@
       "status": "🟢",
       "suggested": "🟢",
       "stars": 177,
-      "last_push_months_ago": 11.7,
+      "last_push_months_ago": 11.9,
       "archived": false,
       "flag": ""
     },
@@ -275,7 +275,7 @@
       "status": "🟡",
       "suggested": "🟡",
       "stars": 143,
-      "last_push_months_ago": 32.2,
+      "last_push_months_ago": 32.4,
       "archived": false,
       "flag": ""
     },
@@ -288,7 +288,7 @@
       "status": "🟢",
       "suggested": "🟢",
       "stars": 40,
-      "last_push_months_ago": 0.1,
+      "last_push_months_ago": 0.4,
       "archived": false,
       "flag": ""
     },
@@ -300,8 +300,8 @@
       "description": "Pre-train, fine-tune, evaluate and serve LLMs in JAX/Flax — the original reference used in several early open models; stable but slower-moving.",
       "status": "🟡",
       "suggested": "🟡",
-      "stars": 2516,
-      "last_push_months_ago": 26.6,
+      "stars": 2517,
+      "last_push_months_ago": 26.8,
       "archived": false,
       "flag": ""
     },
@@ -313,8 +313,8 @@
       "description": "DeepMind's state-of-the-art predictor for protein, nucleic-acid and ligand structure. *Weights gated; non-commercial research license.*",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 8709,
-      "last_push_months_ago": 0.0,
+      "stars": 8743,
+      "last_push_months_ago": 0.1,
       "archived": false,
       "flag": ""
     },
@@ -327,7 +327,7 @@
       "status": "🟡",
       "suggested": "🟢",
       "stars": 108,
-      "last_push_months_ago": 1.9,
+      "last_push_months_ago": 2.1,
       "archived": false,
       "flag": ""
     },
@@ -339,8 +339,8 @@
       "description": "Numerical ODE / SDE / CDE solvers in JAX — the canonical answer for Neural ODEs and continuous-time models.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 2122,
-      "last_push_months_ago": 1.8,
+      "stars": 2124,
+      "last_push_months_ago": 2.1,
       "archived": false,
       "flag": ""
     },
@@ -352,8 +352,8 @@
       "description": "Root-finding, minimization, fixed-points and nonlinear least-squares — the \"SciPy optimize\" of JAX.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 631,
-      "last_push_months_ago": 2.7,
+      "stars": 632,
+      "last_push_months_ago": 3.0,
       "archived": false,
       "flag": ""
     },
@@ -365,8 +365,8 @@
       "description": "Hardware-accelerated, batchable, differentiable optimizers — great for bi-level and implicit-differentiation problems.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 1068,
-      "last_push_months_ago": 0.1,
+      "stars": 1070,
+      "last_push_months_ago": 0.4,
       "archived": false,
       "flag": ""
     },
@@ -378,8 +378,8 @@
       "description": "Massively parallel differentiable rigid-body physics — training humanoid policies on a single GPU in minutes.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 3253,
-      "last_push_months_ago": 0.4,
+      "stars": 3257,
+      "last_push_months_ago": 0.6,
       "archived": false,
       "flag": ""
     },
@@ -391,8 +391,8 @@
       "description": "Differentiable molecular dynamics at accelerator speed — end-to-end backprop through an MD trajectory.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 1470,
-      "last_push_months_ago": 0.2,
+      "stars": 1473,
+      "last_push_months_ago": 0.5,
       "archived": false,
       "flag": ""
     },
@@ -404,8 +404,8 @@
       "description": "High-performance, differentiable simulation of open and closed quantum systems in JAX.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 329,
-      "last_push_months_ago": 0.0,
+      "stars": 331,
+      "last_push_months_ago": 0.2,
       "archived": false,
       "flag": ""
     },
@@ -417,8 +417,8 @@
       "description": "Autodesk's differentiable, massively parallel Lattice-Boltzmann fluid solver for ML-in-the-loop CFD.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 518,
-      "last_push_months_ago": 1.5,
+      "stars": 519,
+      "last_push_months_ago": 0.1,
       "archived": false,
       "flag": ""
     },
@@ -430,8 +430,8 @@
       "description": "Finite-Difference Time-Domain electromagnetic simulation in JAX — design photonic devices with autograd.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 370,
-      "last_push_months_ago": 0.1,
+      "stars": 374,
+      "last_push_months_ago": 0.3,
       "archived": false,
       "flag": ""
     },
@@ -444,7 +444,7 @@
       "status": "🟢",
       "suggested": "🟢",
       "stars": 136,
-      "last_push_months_ago": 5.8,
+      "last_push_months_ago": 6.1,
       "archived": false,
       "flag": ""
     },
@@ -457,7 +457,7 @@
       "status": "🟢",
       "suggested": "🟢",
       "stars": 35,
-      "last_push_months_ago": 0.0,
+      "last_push_months_ago": 0.2,
       "archived": false,
       "flag": ""
     },
@@ -470,7 +470,7 @@
       "status": "🟡",
       "suggested": "🟡",
       "stars": 5,
-      "last_push_months_ago": 21.7,
+      "last_push_months_ago": 21.9,
       "archived": false,
       "flag": ""
     },
@@ -483,7 +483,7 @@
       "status": "🟢",
       "suggested": "🟢",
       "stars": 248,
-      "last_push_months_ago": 16.2,
+      "last_push_months_ago": 16.4,
       "archived": false,
       "flag": ""
     },
@@ -496,7 +496,7 @@
       "status": "🟢",
       "suggested": "🟢",
       "stars": 74,
-      "last_push_months_ago": 0.4,
+      "last_push_months_ago": 0.6,
       "archived": false,
       "flag": ""
     },
@@ -509,7 +509,7 @@
       "status": "🟢",
       "suggested": "🟢",
       "stars": 74,
-      "last_push_months_ago": 0.4,
+      "last_push_months_ago": 0.6,
       "archived": false,
       "flag": ""
     },
@@ -522,7 +522,7 @@
       "status": "🟢",
       "suggested": "🟢",
       "stars": 218,
-      "last_push_months_ago": 7.4,
+      "last_push_months_ago": 7.6,
       "archived": false,
       "flag": ""
     },
@@ -535,7 +535,7 @@
       "status": "🟢",
       "suggested": "🟢",
       "stars": 175,
-      "last_push_months_ago": 0.2,
+      "last_push_months_ago": 0.1,
       "archived": false,
       "flag": ""
     },
@@ -548,7 +548,7 @@
       "status": "🟢",
       "suggested": "🟢",
       "stars": 23,
-      "last_push_months_ago": 1.4,
+      "last_push_months_ago": 1.6,
       "archived": false,
       "flag": ""
     },
@@ -561,7 +561,7 @@
       "status": "🟢",
       "suggested": "🟢",
       "stars": 67,
-      "last_push_months_ago": 0.0,
+      "last_push_months_ago": 0.1,
       "archived": false,
       "flag": ""
     },
@@ -574,7 +574,7 @@
       "status": "🟢",
       "suggested": "🟢",
       "stars": 39,
-      "last_push_months_ago": 0.5,
+      "last_push_months_ago": 0.8,
       "archived": false,
       "flag": ""
     },
@@ -587,7 +587,7 @@
       "status": "🟢",
       "suggested": "🟢",
       "stars": 47,
-      "last_push_months_ago": 0.9,
+      "last_push_months_ago": 1.1,
       "archived": false,
       "flag": ""
     },
@@ -599,8 +599,8 @@
       "description": "The mainstream full-DSL probabilistic programming language — Pyro semantics on a JAX engine.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 2774,
-      "last_push_months_ago": 0.0,
+      "stars": 2778,
+      "last_push_months_ago": 0.1,
       "archived": false,
       "flag": ""
     },
@@ -612,8 +612,8 @@
       "description": "Composable samplers — NUTS, HMC, SMC, VI — with no DSL lock-in. Bring your own log-density.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 1138,
-      "last_push_months_ago": 0.8,
+      "stars": 1139,
+      "last_push_months_ago": 0.2,
       "archived": false,
       "flag": ""
     },
@@ -626,7 +626,7 @@
       "status": "🟢",
       "suggested": "🟢",
       "stars": 658,
-      "last_push_months_ago": 0.4,
+      "last_push_months_ago": 0.6,
       "archived": false,
       "flag": ""
     },
@@ -638,8 +638,8 @@
       "description": "Probabilistic state-space models — HMMs, LGSSMs, nonlinear filters — with Kevin Murphy's seal of approval.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 1022,
-      "last_push_months_ago": 0.0,
+      "stars": 1025,
+      "last_push_months_ago": 0.2,
       "archived": false,
       "flag": ""
     },
@@ -651,7 +651,7 @@
       "description": "Gaussian Processes in JAX — a didactic, extensible framework for kernel machines.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 669,
+      "stars": 670,
       "last_push_months_ago": 0.0,
       "archived": false,
       "flag": ""
@@ -665,7 +665,7 @@
       "status": "🟢",
       "suggested": "🟢",
       "stars": 350,
-      "last_push_months_ago": 0.0,
+      "last_push_months_ago": 0.2,
       "archived": false,
       "flag": ""
     },
@@ -678,7 +678,7 @@
       "status": "🟢",
       "suggested": "🟢",
       "stars": 246,
-      "last_push_months_ago": 0.3,
+      "last_push_months_ago": 0.0,
       "archived": false,
       "flag": ""
     },
@@ -691,7 +691,7 @@
       "status": "🟢",
       "suggested": "🟢",
       "stars": 110,
-      "last_push_months_ago": 2.8,
+      "last_push_months_ago": 3.0,
       "archived": false,
       "flag": ""
     },
@@ -703,8 +703,8 @@
       "description": "Fully vectorized, end-to-end JIT'd RL pipelines — PPO on 2048 envs without leaving JAX. Low recent commit activity, but remains the canonical reference for the JAX-native RL-loop pattern.",
       "status": "🟡",
       "suggested": "🟡",
-      "stars": 1122,
-      "last_push_months_ago": 25.7,
+      "stars": 1127,
+      "last_push_months_ago": 26.0,
       "archived": false,
       "flag": ""
     },
@@ -716,8 +716,8 @@
       "description": "InstaDeep's suite of industry-driven, hardware-accelerated RL environments — from bin-packing to routing.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 876,
-      "last_push_months_ago": 0.5,
+      "stars": 877,
+      "last_push_months_ago": 0.8,
       "archived": false,
       "flag": ""
     },
@@ -729,8 +729,8 @@
       "description": "Classic Gym environments re-implemented in JAX — CartPole, Atari-lite, bsuite, and more, all JIT-compatible.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 938,
-      "last_push_months_ago": 0.1,
+      "stars": 943,
+      "last_push_months_ago": 0.0,
       "archived": false,
       "flag": ""
     },
@@ -742,8 +742,8 @@
       "description": "Vectorized board-game environments with an AlphaZero reference — Chess, Shogi, Go at scale.",
       "status": "🟡",
       "suggested": "🟡",
-      "stars": 657,
-      "last_push_months_ago": 19.9,
+      "stars": 660,
+      "last_push_months_ago": 20.1,
       "archived": false,
       "flag": ""
     },
@@ -756,7 +756,7 @@
       "status": "🟢",
       "suggested": "🟢",
       "stars": 184,
-      "last_push_months_ago": 1.7,
+      "last_push_months_ago": 1.9,
       "archived": false,
       "flag": ""
     },
@@ -768,8 +768,8 @@
       "description": "Quality-Diversity optimization — MAP-Elites and neuro-evolution at accelerator speed.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 364,
-      "last_push_months_ago": 12.1,
+      "stars": 365,
+      "last_push_months_ago": 12.3,
       "archived": false,
       "flag": ""
     },
@@ -781,8 +781,8 @@
       "description": "JAX-based evolutionary strategies — CMA-ES, OpenAI-ES, NSLC, ready to vectorize.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 804,
-      "last_push_months_ago": 0.7,
+      "stars": 805,
+      "last_push_months_ago": 0.0,
       "archived": false,
       "flag": ""
     },
@@ -794,8 +794,8 @@
       "description": "DeepMind's RL building blocks — value functions, distributional losses, exploration — the LEGO set, not the agent.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 1451,
-      "last_push_months_ago": 1.7,
+      "stars": 1452,
+      "last_push_months_ago": 2.0,
       "archived": false,
       "flag": ""
     },
@@ -807,8 +807,8 @@
       "description": "DeepMind's Monte-Carlo Tree Search primitives in native JAX — MuZero-style planning, vectorized.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 2683,
-      "last_push_months_ago": 0.9,
+      "stars": 2685,
+      "last_push_months_ago": 1.1,
       "archived": false,
       "flag": ""
     },
@@ -821,7 +821,7 @@
       "status": "🟡",
       "suggested": "🟡",
       "stars": 166,
-      "last_push_months_ago": 24.5,
+      "last_push_months_ago": 24.7,
       "archived": false,
       "flag": ""
     },
@@ -834,7 +834,7 @@
       "status": "🟢",
       "suggested": "🟢",
       "stars": 3847,
-      "last_push_months_ago": 0.0,
+      "last_push_months_ago": 0.3,
       "archived": false,
       "flag": ""
     },
@@ -847,7 +847,7 @@
       "status": "🟢",
       "suggested": "🟢",
       "stars": 452,
-      "last_push_months_ago": 0.0,
+      "last_push_months_ago": 0.1,
       "archived": false,
       "flag": ""
     },
@@ -860,7 +860,7 @@
       "status": "🟢",
       "suggested": "🟢",
       "stars": 719,
-      "last_push_months_ago": 0.2,
+      "last_push_months_ago": 0.5,
       "archived": false,
       "flag": ""
     },
@@ -873,7 +873,7 @@
       "status": "🟢",
       "suggested": "🟢",
       "stars": 16,
-      "last_push_months_ago": 0.2,
+      "last_push_months_ago": 0.1,
       "archived": false,
       "flag": ""
     },
@@ -899,7 +899,7 @@
       "status": "🟢",
       "suggested": "🟢",
       "stars": 14,
-      "last_push_months_ago": 0.2,
+      "last_push_months_ago": 0.0,
       "archived": false,
       "flag": ""
     },
@@ -912,7 +912,7 @@
       "status": "🟢",
       "suggested": "🟢",
       "stars": 139,
-      "last_push_months_ago": 3.8,
+      "last_push_months_ago": 4.1,
       "archived": false,
       "flag": ""
     },
@@ -924,8 +924,8 @@
       "description": "Optimal transport — Sinkhorn, low-rank Gromov-Wasserstein, and neural OT — the reference toolkit in JAX.",
       "status": "🟢",
       "suggested": "🟢",
-      "stars": 770,
-      "last_push_months_ago": 1.4,
+      "stars": 772,
+      "last_push_months_ago": 0.1,
       "archived": false,
       "flag": ""
     },
@@ -964,7 +964,7 @@
       "status": "🔴",
       "suggested": "🔴",
       "stars": 952,
-      "last_push_months_ago": 28.2,
+      "last_push_months_ago": 28.4,
       "archived": true,
       "flag": ""
     },
@@ -976,8 +976,8 @@
       "description": "Archived by DeepMind in 2024. **→ No drop-in JAX-native successor.** For new GNN work, consider PyTorch Geometric or compose message-passing primitives with Equinox.",
       "status": "🔴",
       "suggested": "🔴",
-      "stars": 1475,
-      "last_push_months_ago": 31.5,
+      "stars": 1476,
+      "last_push_months_ago": 31.7,
       "archived": true,
       "flag": ""
     }
