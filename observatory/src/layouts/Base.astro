@@ -18,7 +18,7 @@ const base = import.meta.env.BASE_URL;
 // Absolute URLs are required by OG / Twitter card scrapers — they fetch
 // the meta-image from outside the site, so a relative path like
 // "/og-image.png" wouldn't resolve. `Astro.site` is the canonical origin
-// from astro.config.mjs (https://jaxlaxy.bryanbradfo.me).
+// from astro.config.mjs (https://jaxlaxy.bradfo.me).
 const ogImage = new URL(`${base}og-image.png`, Astro.site).href;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 ---
