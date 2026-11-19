@@ -27,11 +27,13 @@ import * as THREE from "three";
 // (base=/) and in production under the sub-path (base=/JAXlaxy/).
 const LOGO_PATH = `${import.meta.env.BASE_URL}core-logo.png`;
 // Desktop scales — kept as the canonical "size of the core" reference.
-const LOGO_SCALE = 4.5; // world units — sharp, dense core (not a giant sun)
+// The planet body fills only ~60% of core-logo.png (the ring spans the full
+// width), so the sprite is scaled up to keep the planet as large as the aura core.
+const LOGO_SCALE = 7.0; // world units
 const AURA_SCALE = 8.5; // aura ~1.89× logo for soft halo (proportional to new logo size)
 // Mobile scales — pulled in to fit the narrower portrait viewport without
 // crowding the surrounding star clusters.
-const LOGO_SCALE_MOBILE = 3.5;
+const LOGO_SCALE_MOBILE = 5.5;
 const AURA_SCALE_MOBILE = 7.0;
 
 // ─── aura texture ─────────────────────────────────────────────────────────
