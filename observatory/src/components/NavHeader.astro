@@ -33,8 +33,18 @@ const NAV_LINK_ACTIVE = "text-white border-[#7dd3fc]";
 >
   <a
     href={mapHref}
-    class="flex items-baseline gap-2 transition-opacity hover:opacity-90"
+    class="flex items-center gap-2 transition-opacity hover:opacity-90"
   >
+    {/* Decorative mark — the "JAXlaxy" text right after it is the link's
+        accessible name, so alt is empty. 121×96 source, shown at 24px tall
+        (≈4× density for retina). */}
+    <img
+      src={`${base}logo-mark.png`}
+      alt=""
+      width="30"
+      height="24"
+      class="h-6 w-auto shrink-0"
+    />
     <span class="text-[13px] font-semibold text-white">JAXlaxy</span>
     {/* Hide the · Observatory subtitle on phones — saves room for the nav. */}
     <span class="hidden sm:inline text-[13px] font-light text-white/30">·</span>
